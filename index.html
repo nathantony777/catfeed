@@ -1,0 +1,1871 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="猫饭">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130F" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>两只猫的饭点</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+:root{
+  --paper:#F6F5F1; --surface:#FFFFFF; --surface-2:#EDEBE4; --line:#DDD9CF;
+  --ink:#201D18; --ink-2:#5E584E; --ink-3:#918A7D;
+  --a:#2F5E76; --a-soft:#DCE9F0; --a-line:#A9C9D9;
+  --b:#9A5015; --b-soft:#F4E2D0; --b-line:#DFB891;
+  --alert:#A8322A; --alert-soft:#F6DFDC; --alert-line:#E0B0AA;
+  --ok:#3F6B42;
+  --shadow:0 1px 2px rgba(32,29,24,.05), 0 8px 24px -16px rgba(32,29,24,.22);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --cond:"IBM Plex Sans Condensed",-apple-system,sans-serif;
+  --cjk:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14130F; --surface:#1C1A16; --surface-2:#26231D; --line:#35312A;
+    --ink:#EDEAE1; --ink-2:#A39C8E; --ink-3:#756E62;
+    --a:#7FB9D4; --a-soft:#17303C; --a-line:#2E5468;
+    --b:#E0A067; --b-soft:#3A2513; --b-line:#6B4620;
+    --alert:#E8867A; --alert-soft:#3B1A16; --alert-line:#6E322A;
+    --ok:#7FBF84;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14130F; --surface:#1C1A16; --surface-2:#26231D; --line:#35312A;
+  --ink:#EDEAE1; --ink-2:#A39C8E; --ink-3:#756E62;
+  --a:#7FB9D4; --a-soft:#17303C; --a-line:#2E5468;
+  --b:#E0A067; --b-soft:#3A2513; --b-line:#6B4620;
+  --alert:#E8867A; --alert-soft:#3B1A16; --alert-line:#6E322A;
+  --ok:#7FBF84;
+  --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -18px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--cjk);
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+.wrap{max-width:452px;margin:0 auto;padding:0 16px 64px}
+
+.top{margin:0 -16px;padding:20px 20px 15px;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-l{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.eyebrow{font-family:var(--cond);font-size:10.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 3px}
+.top h1{margin:0;font-size:19px;font-weight:600;letter-spacing:.01em}
+.top .wk{text-align:right;font-size:11.5px;color:var(--ink-2);line-height:1.35}
+.top .wk b{display:block;font-family:var(--mono);font-size:17px;color:var(--ink);font-weight:600}
+.ladder{display:flex;gap:4px;margin-top:14px}
+.rung{flex:1}
+.rung i{display:block;height:5px;border-radius:2px;background:var(--surface-2);
+  border:1px solid var(--line);box-sizing:border-box}
+.rung.done i{background:var(--ink-3);border-color:var(--ink-3)}
+.rung.now i{background:var(--ok);border-color:var(--ok)}
+.rung span{display:block;font-family:var(--cond);font-size:9.5px;color:var(--ink-3);
+  margin-top:5px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rung.now span{color:var(--ok);font-weight:600}
+
+.next{margin:14px 0 4px;border:1px solid var(--line);border-radius:14px;
+  background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.next-h{display:flex;align-items:baseline;gap:9px;padding:13px 15px 10px}
+.next-h b{font-size:16px;font-weight:600}
+.next-h .t{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:-.01em}
+.next-h .in{margin-left:auto;font-size:11.5px;color:var(--ink-2);font-family:var(--cond);letter-spacing:.02em}
+.next-g{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.next-g>div{background:var(--surface);padding:11px 14px 13px}
+.next-g .who{font-family:var(--cond);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:3px}
+.next-g .gg{font-family:var(--mono);font-size:34px;font-weight:600;line-height:1.05;letter-spacing:-.02em}
+.next-g .gg u{text-decoration:none;font-size:14px;font-weight:500;margin-left:2px}
+.next-g .fd{font-size:11.5px;margin-top:3px;font-weight:600}
+.next-g .fd2{font-size:10.5px;color:var(--ink-3);margin-top:1px}
+.next-g .ca .who,.next-g .ca .gg,.next-g .ca .fd{color:var(--a)}
+.next-g .cb .who,.next-g .cb .gg,.next-g .cb .fd{color:var(--b)}
+.next-f{padding:9px 15px 11px;border-top:1px solid var(--line);background:var(--surface-2);
+  font-size:11.5px;color:var(--ink-2)}
+.next-f b{color:var(--ink);font-weight:600}
+
+.nav{display:flex;align-items:center;gap:9px;margin:18px 0 10px}
+.nav button{width:38px;height:38px;flex:none;border-radius:11px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:16px;cursor:pointer;line-height:1}
+.nav .cur{flex:1;text-align:center}
+.nav .cur b{display:block;font-size:15.5px;font-weight:600}
+.nav .cur span{font-size:11px;color:var(--ink-2);font-family:var(--cond);letter-spacing:.04em}
+.pill{display:inline-block;margin-left:5px;font-family:var(--cond);font-size:9.5px;
+  letter-spacing:.08em;padding:1.5px 6px;border-radius:20px;background:var(--surface-2);
+  color:var(--ink-2);vertical-align:2px;border:1px solid var(--line)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  margin-bottom:12px;overflow:hidden}
+.ch{display:flex;align-items:baseline;gap:8px;padding:12px 15px 9px}
+.ch h2{margin:0;font-size:14.5px;font-weight:600;letter-spacing:.01em}
+.ch .k{font-family:var(--cond);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3)}
+.ch .m{margin-left:auto;font-size:11px;color:var(--ink-2);font-family:var(--cond);
+  letter-spacing:.03em;text-align:right}
+.note{padding:10px 15px 13px;font-size:11.5px;color:var(--ink-2);
+  border-top:1px solid var(--line);line-height:1.65}
+.note b{color:var(--ink);font-weight:600}
+
+.legend{display:flex;gap:12px;padding:0 15px 9px;font-size:10.5px;color:var(--ink-3);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:4px}
+.lb{width:12px;height:12px;border-radius:4px;border:1.5px solid var(--line);
+  background:var(--paper);flex:none}
+.lb.s1{background:var(--ink-3);border-color:var(--ink-3)}
+.lb.s2{border-color:var(--ink-3);background:linear-gradient(to top,var(--ink-3) 50%,transparent 50%)}
+.lb.s3{border-color:var(--alert);background:var(--alert-soft)}
+
+.meal{border-top:1px solid var(--line)}
+.meal-h{display:flex;align-items:baseline;gap:7px;padding:9px 15px 5px}
+.meal-h b{font-size:13.5px;font-weight:600}
+.meal-h .tm{font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+.meal-h .pc{margin-left:auto;font-family:var(--cond);font-size:10px;color:var(--ink-3);letter-spacing:.05em}
+.cells{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 15px 11px}
+.cell{border-radius:10px;border:1px solid var(--line);border-left-width:3px;
+  background:var(--paper);overflow:hidden;transition:background .13s,border-color .13s}
+.cell.ca{border-left-color:var(--a-line)} .cell.cb{border-left-color:var(--b-line)}
+.cmain{display:block;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  border:none;background:transparent;padding:9px 10px 6px;-webkit-tap-highlight-color:transparent}
+.cmain:active{background:var(--surface-2)}
+.cell .hd{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.cell .nm{font-family:var(--cond);font-size:10.5px;letter-spacing:.05em;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.cell .nm em{font-style:normal;margin-left:4px}
+.cell .bx{width:18px;height:18px;flex:none;border-radius:6px;border:1.5px solid var(--line);
+  background:var(--surface);position:relative;transition:background .13s,border-color .13s}
+.cell .amt{display:flex;align-items:baseline;gap:3px}
+.cell .amt b{font-family:var(--mono);font-size:25px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.cell .amt u{text-decoration:none;font-size:11px;color:var(--ink-3)}
+.cell.ca .amt b{color:var(--a)} .cell.cb .amt b{color:var(--b)}
+.fchip{display:flex;align-items:baseline;justify-content:space-between;gap:6px;width:100%;
+  text-align:left;border:none;border-top:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink-2);font:inherit;font-size:11px;
+  padding:5px 10px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fchip:active{background:var(--line)}
+.fchip b{font-weight:600;color:var(--ink)}
+.fchip span{color:var(--ink-3);font-family:var(--mono);font-size:10.5px;white-space:nowrap}
+.cell.wet{background:var(--surface)}
+.cell.ca.wet .fchip{background:var(--a-soft);color:var(--a)}
+.cell.ca.wet .fchip b{color:var(--a)}
+.cell.cb.wet .fchip{background:var(--b-soft);color:var(--b)}
+.cell.cb.wet .fchip b{color:var(--b)}
+.cell.s1 .cmain{background:var(--surface-2)}
+.cell.ca.s1 .bx{background:var(--a);border-color:var(--a)}
+.cell.cb.s1 .bx{background:var(--b);border-color:var(--b)}
+.cell.s1 .bx::after{content:"";position:absolute;left:5.5px;top:2.5px;width:4.5px;height:9px;
+  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.cell.s1 .amt b{opacity:.42} .cell.s1 .nm em{color:var(--ink-3)}
+.cell.ca.s2 .bx{border-color:var(--a);background:linear-gradient(to top,var(--a) 50%,transparent 50%)}
+.cell.cb.s2 .bx{border-color:var(--b);background:linear-gradient(to top,var(--b) 50%,transparent 50%)}
+.cell.s2 .nm em{color:var(--ink-2)}
+.cell.s3{border-color:var(--alert-line);border-left-color:var(--alert)}
+.cell.s3 .cmain{background:var(--alert-soft)}
+.cell.s3 .bx{border-color:var(--alert);background:var(--alert-soft)}
+.cell.s3 .bx::after{content:"";position:absolute;left:7px;top:7px;width:4px;height:4px;
+  border-radius:50%;background:var(--alert)}
+.cell.s3 .nm em{color:var(--alert);font-weight:600}
+.cell.s3 .amt b{color:var(--alert)}
+.cmain:focus-visible,.fchip:focus-visible{outline:2px solid var(--ok);outline-offset:-2px}
+.volwarn{grid-column:1/-1;margin:-4px 0 4px;padding:7px 10px;border-radius:8px;
+  background:var(--alert-soft);border:1px solid var(--alert-line);font-size:11px;
+  color:var(--alert);line-height:1.5}
+.volwarn b{font-weight:600}
+.dayfoot{border-top:1px solid var(--line);padding:9px 15px 11px;display:flex;gap:14px;
+  font-size:11.5px;color:var(--ink-2);flex-wrap:wrap}
+.dayfoot b{font-family:var(--mono);font-weight:600}
+.dayfoot .ta b{color:var(--a)} .dayfoot .tb b{color:var(--b)}
+
+.phase .ph-body{padding:2px 15px 14px;font-size:13px}
+.phase .ph-body p{margin:0 0 9px} .phase .ph-body p:last-child{margin-bottom:0}
+.rd{color:var(--alert);font-weight:600}
+.tagrow{display:flex;gap:6px;padding:0 15px 11px;flex-wrap:wrap}
+.tag{font-family:var(--cond);font-size:10.5px;letter-spacing:.05em;padding:3px 8px;
+  border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.tag b{font-family:var(--mono);color:var(--ink);font-weight:600}
+
+.wgrid{display:grid;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.wrow{background:var(--surface);padding:12px 15px 13px}
+.wtop{display:flex;align-items:flex-end;gap:12px}
+.wl{flex:none;width:112px}
+.wl .nm{font-family:var(--cond);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.wi{display:flex;align-items:baseline;gap:4px;margin-top:2px}
+.wi input{width:66px;border:none;border-bottom:2px solid var(--line);background:transparent;
+  font-family:var(--mono);font-size:25px;font-weight:600;color:var(--ink);padding:0 0 2px;
+  text-align:left;-moz-appearance:textfield}
+.wi input::-webkit-outer-spin-button,.wi input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.wi input:focus{outline:none}
+.wrow.ca .nm{color:var(--a)} .wrow.ca .wi input:focus{border-bottom-color:var(--a)}
+.wrow.cb .nm{color:var(--b)} .wrow.cb .wi input:focus{border-bottom-color:var(--b)}
+.wi span{font-size:11.5px;color:var(--ink-2)}
+.spark{flex:1;min-width:0}
+.spark svg{width:100%;height:56px;display:block}
+.verdict{margin-top:9px;font-size:12px;line-height:1.55;padding:8px 10px;border-radius:9px;
+  background:var(--surface-2);border:1px solid var(--line)}
+.verdict b{font-weight:600}
+.verdict.good b{color:var(--ok)}
+.verdict.warn{background:var(--alert-soft);border-color:var(--alert-line)}
+.verdict.warn b{color:var(--alert)}
+.adj{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:11.5px;color:var(--ink-2);
+  flex-wrap:wrap}
+.adj button{width:27px;height:27px;border-radius:8px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-size:14px;line-height:1;cursor:pointer;
+  font-family:var(--mono);flex:none}
+.adj .v{font-family:var(--mono);font-weight:600;color:var(--ink);min-width:54px;text-align:center}
+
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.wk{width:100%;border-collapse:collapse;font-size:12px;min-width:380px}
+table.wk th,table.wk td{padding:7px 6px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}
+table.wk th:first-child,table.wk td:first-child{text-align:left;padding-left:15px}
+table.wk td:last-child,table.wk th:last-child{padding-right:15px}
+table.wk thead th{font-family:var(--cond);font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;border-top:none;padding-bottom:4px}
+table.wk td.g{font-family:var(--mono);font-variant-numeric:tabular-nums}
+table.wk tr.now td{background:var(--surface-2)}
+table.wk tr.now td:first-child{font-weight:600}
+table.wk td.ga{color:var(--a)} table.wk td.gb{color:var(--b)}
+table.wk .sub{font-size:10px;color:var(--ink-3)}
+
+.pick{border-top:1px solid var(--line);padding:11px 15px 13px}
+.pick .who{font-family:var(--cond);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.pick.ca .who{color:var(--a)} .pick.cb .who{color:var(--b)}
+.pick ul{margin:0;padding-left:17px;font-size:12.5px;line-height:1.7}
+.pick li{margin:3px 0}
+.rule{display:flex;gap:9px;padding:9px 15px;border-top:1px solid var(--line);font-size:12.5px;
+  line-height:1.6;align-items:flex-start}
+.rule .no{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none;padding-top:2px;width:15px}
+.dw{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.dwc{background:var(--surface);padding:11px 14px 13px}
+.dwc .who{font-family:var(--cond);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.dwc.ca .who{color:var(--a)} .dwc.cb .who{color:var(--b)}
+.dwc .due{font-family:var(--mono);font-size:19px;font-weight:600;line-height:1.2}
+.dwc .sub{font-size:10.5px;color:var(--ink-2);margin-top:2px;line-height:1.45}
+.dwc .soon{color:var(--alert)}
+.dwc input{width:100%;margin-top:7px;padding:5px 7px;border-radius:7px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:12px}
+.dwc label{display:block;font-family:var(--cond);font-size:9.5px;letter-spacing:.05em;
+  color:var(--ink-3);margin-top:6px}
+
+.red{border-color:var(--alert-line);background:var(--alert-soft)}
+.red .ch h2,.red .ch .k{color:var(--alert)}
+.red ul{margin:0;padding:0 16px 14px 32px;font-size:12.5px;line-height:1.65}
+.red li{margin:6px 0}
+.red li b{font-weight:600;color:var(--alert)}
+
+.set{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:2px 15px 14px}
+.set label{display:block;font-size:11px;color:var(--ink-2);margin-bottom:3px;
+  font-family:var(--cond);letter-spacing:.04em}
+.set input{width:100%;padding:7px 9px;border-radius:8px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:13.5px;font-weight:500}
+.set input[type=text]{font-family:var(--cjk);font-size:13px}
+.set input:focus{outline:none;border-color:var(--ink-3)}
+.set .hint{font-size:10.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+.set .grp{grid-column:1/-1;font-family:var(--cond);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin:8px 0 -2px;padding-top:8px;
+  border-top:1px solid var(--line)}
+.set .grp:first-child{margin-top:0;padding-top:0;border-top:none}
+.tog{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;
+  border:1px solid var(--line);background:var(--paper);cursor:pointer;text-align:left;font:inherit;color:inherit}
+.tog .sw{width:38px;height:22px;border-radius:20px;background:var(--surface-2);
+  border:1px solid var(--line);position:relative;flex:none;transition:background .15s}
+.tog .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;
+  border-radius:50%;background:var(--ink-3);transition:transform .15s,background .15s}
+.tog.on .sw{background:var(--b-soft);border-color:var(--b-line)}
+.tog.on .sw::after{transform:translateX(16px);background:var(--b)}
+.tog .tx{font-size:12px;line-height:1.45}
+.tog .tx b{display:block;font-size:12.5px;font-weight:600}
+.tog .tx span{color:var(--ink-3);font-size:11px}
+
+.nadd{padding:2px 15px 13px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.chip{font-family:var(--cond);font-size:11.5px;letter-spacing:.03em;padding:5px 10px;
+  border-radius:20px;background:var(--paper);border:1px solid var(--line);color:var(--ink-2);
+  cursor:pointer;font-weight:500;-webkit-tap-highlight-color:transparent}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip[data-who=a].on{background:var(--a);border-color:var(--a);color:#fff}
+.chip[data-who=b].on{background:var(--b);border-color:var(--b);color:#fff}
+.chip:focus-visible{outline:2px solid var(--ok);outline-offset:1px}
+.nrow{display:flex;gap:7px;margin-top:3px}
+.nrow input{flex:1;min-width:0;padding:9px 11px;border-radius:9px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font:inherit;font-size:13px}
+.nrow input:focus{outline:none;border-color:var(--ink-3)}
+.nrow button{flex:none;padding:0 15px;border-radius:9px;border:1px solid var(--line);
+  background:var(--ink);color:var(--paper);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.nhint{font-size:10.5px;color:var(--ink-3);margin-top:6px;line-height:1.5}
+.nitem{display:flex;gap:9px;align-items:flex-start;padding:9px 15px;border-top:1px solid var(--line)}
+.nitem .nd{flex:none;width:52px;font-family:var(--mono);font-size:11px;color:var(--ink-3);padding-top:2px}
+.nitem .nb{flex:1;min-width:0;font-size:12.5px;line-height:1.55}
+.nitem .nt{font-family:var(--cond);font-size:10.5px;letter-spacing:.04em;padding:1.5px 7px;
+  border-radius:20px;background:var(--surface-2);border:1px solid var(--line);margin-right:5px;
+  display:inline-block;vertical-align:1px}
+.nitem .nt.ca{background:var(--a-soft);border-color:var(--a-line);color:var(--a)}
+.nitem .nt.cb{background:var(--b-soft);border-color:var(--b-line);color:var(--b)}
+.nitem .nx{flex:none;width:26px;height:26px;border-radius:8px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink-3);font-size:13px;line-height:1;cursor:pointer}
+.impwrap{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.impwrap .dlbtn{flex:1;min-width:130px;font-size:12.5px;padding:9px}
+.dlbtn{display:block;width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font:inherit;font-size:13.5px;font-weight:600;
+  cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dlbtn:active{background:var(--surface-2)}
+.dlbtn:focus-visible{outline:2px solid var(--ok);outline-offset:-2px}
+#dlta{width:100%;height:130px;margin-top:9px;padding:8px;border-radius:9px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  font-family:var(--mono);font-size:10.5px;line-height:1.5;resize:vertical}
+#dlnote{margin-top:8px;font-size:11.5px;color:var(--ink-2);line-height:1.6}
+.ghin{width:100%;padding:10px;border-radius:9px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:12.5px;margin-top:5px;
+  -webkit-appearance:none}
+.ghin:focus{outline:none;border-color:var(--ink-3)}
+.ghrow{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.ghrow .dlbtn{flex:1;min-width:110px;font-size:12.5px;padding:9px}
+.ghlab{font-size:10.5px;color:var(--ink-3);margin-top:10px;font-family:var(--cond);letter-spacing:.06em}
+#ghstat{margin-top:10px;font-size:12px;line-height:1.6;min-height:19px}
+#ghstat .gok{color:var(--ok);font-weight:600}
+#ghstat .gbad{color:var(--alert);font-weight:600}
+#ghstat .gm{color:var(--ink-3)}
+#ghwho{font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+#ghwho b{font-family:var(--mono);font-size:12px;color:var(--ink)}
+details.ex{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:8px}
+details.ex summary{padding:11px 15px;font-size:13px;font-weight:500;cursor:pointer;
+  list-style:none;display:flex;align-items:center;gap:8px}
+details.ex summary::-webkit-details-marker{display:none}
+details.ex summary::after{content:"＋";margin-left:auto;color:var(--ink-3);font-family:var(--mono)}
+details.ex[open] summary::after{content:"－"}
+details.ex[open] summary{border-bottom:1px solid var(--line)}
+details.ex .bd{padding:12px 15px 14px;font-size:12.5px;color:var(--ink-2);line-height:1.75}
+details.ex .bd b{color:var(--ink);font-weight:600}
+details.ex .bd p{margin:0 0 10px} details.ex .bd p:last-child{margin-bottom:0}
+details.ex .bd .kbd{font-family:var(--mono);font-size:11.5px;background:var(--surface-2);
+  padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
+h3.sec{font-family:var(--cond);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:24px 0 10px;font-weight:600}
+.foot{font-size:11px;color:var(--ink-3);text-align:center;line-height:1.75;padding:18px 8px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+img{max-width:100%}[hidden]{display:none!important}
+body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+  <div class="top-l">
+    <div><p class="eyebrow">定时定量 · 到点收走</p><h1>两只猫的饭点</h1></div>
+    <div class="wk"><b id="wkno">第 1 周</b><span id="wkname">拆自助餐</span></div>
+  </div>
+  <div class="ladder" id="ladder"></div>
+</div>
+
+<section class="next" id="next"></section>
+
+<div class="nav">
+  <button id="prev" aria-label="前一天">‹</button>
+  <div class="cur"><b id="curdate">—</b><span id="curmeta">—</span></div>
+  <button id="nextd" aria-label="后一天">›</button>
+</div>
+
+<section class="card">
+  <div class="ch"><span class="k">今天</span><h2>三顿</h2><div class="m" id="todaym"></div></div>
+  <div class="legend">
+    <span><i class="lb"></i>没喂</span><span><i class="lb s1"></i>光盘</span>
+    <span><i class="lb s2"></i>有剩</span><span><i class="lb s3"></i>一口没碰</span>
+    <span style="color:var(--ink-3)">· 点数字换状态；点下面那条＝今天这顿开罐头</span>
+  </div>
+  <div id="meals"></div>
+  <div class="dayfoot" id="dayfoot"></div>
+</section>
+
+<section class="card phase" id="phase"></section>
+
+<section class="card">
+  <div class="ch"><span class="k">每周称重</span><h2>秤说了算</h2><div class="m">固定一天 · 空腹</div></div>
+  <div class="wgrid" id="weights"></div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">罐头怎么换</span><h2 id="swaph2">1 罐 ≈ 20 g 干粮</h2>
+    <div class="m">想开就开<br>当天从干粮里扣</div></div>
+  <div class="dw" id="swap"></div>
+  <div class="scroller"><table class="wk" id="swaptable"></table></div>
+  <div class="note" id="swapnote"></div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">买什么罐头</span><h2>只看三件事</h2></div>
+  <div class="rule"><span class="no">1</span><div><b>包装上必须有「全价」两个字。</b>写「营养均衡」「精选鸡肉」都不算。<b class="rd">零食罐、白肉罐、吞拿鱼罐不能当饭吃</b> —— 纯肉钙磷比是反的（磷高钙低），长期当主食会让骨头脱钙，幼猫尤其危险。当零食偶尔给可以。</div></div>
+  <div class="rule"><span class="no">2</span><div><b id="r2-name">猫 2</b> 的要写<b>「幼猫」或「全阶段」</b>，成猫专用的不行（脂肪和 DHA 不够她长身体）。<b id="r2-name2">猫 1</b> 用成猫全价罐就行。</div></div>
+  <div class="rule"><span class="no">3</span><div><b>看每 100 g 多少千卡</b>，填进下面设置里。包装上一般在「代谢能」旁边，或者写每罐多少 kcal。填对了，上面的克数才是对的。</div></div>
+  <div class="pick cb">
+    <div class="who" id="pick-b">猫 2 · 幼猫全价主食罐</div>
+    <ul>
+      <li><b>皇家 Royal Canin 幼猫慕斯罐</b>（Kitten / Babycat Instinctive）—— 最稳。哪儿都买得到，配方多年没变，慕斯质地幼猫接受度高。约 100 kcal/100g。</li>
+      <li><b>冠能 Pro Plan 幼猫主食罐</b> —— 跟她的干粮同一家，换食肠胃反应最小。</li>
+      <li><b>Instinct 生鲜本能 / Wellness CORE 幼猫罐</b> —— 肉含量更高，贵一截。</li>
+    </ul>
+  </div>
+  <div class="pick ca">
+    <div class="who" id="pick-a">猫 1 · 成猫全价主食罐</div>
+    <ul>
+      <li><b>别买「减肥处方罐」，多花钱。</b>湿粮 70~80% 是水 —— <b>普通高蛋白全价成猫罐本身就是减肥食品</b>，同样饱腹感热量低得多。</li>
+      <li>挑<b>每 100 g 60~90 千卡</b>、脂肪低的。<b>肉泥 / 慕斯比肉块加汤汁的实在</b> —— 汤汁那种一罐一半是水。</li>
+      <li><b>皇家成猫主食罐、冠能成猫主食罐</b>都行。有泌尿或肾的毛病就用对应处方罐，问医生。</li>
+    </ul>
+  </div>
+  <div class="note">
+    <b>不要买：</b>没有「全价」两个字的罐头当正餐 · <b>人吃的金枪鱼罐头</b>（盐太高）· 换罐头后拉稀，先怀疑增稠剂（卡拉胶那类），换个牌子试试。
+  </div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">驱虫</span><h2>不用每月，按风险来</h2><div class="m" id="dwm"></div></div>
+  <div class="dw" id="dworm"></div>
+  <div class="dw"><div class="dwc" style="grid-column:1/-1">
+    <label for="dw-last">上次驱虫日期（两只一起做，填一个就行）</label>
+    <input id="dw-last" type="date" data-s="dwlast">
+    <div class="sub" style="margin-top:6px"><b>选哪种：</b>不管绦虫的滴剂（大宠爱、爱沃克）够日常用；家里有跳蚤或猫会出门，换<b>博来恩</b>（连绦虫一起管）。<b>剂量按包装上的体重档给</b> —— 借称重那天的实际体重来选。</div>
+  </div></div>
+  <div class="note">
+    <b class="rd">最重要的一条：绝对不能给猫用狗的驱虫药。</b>很多犬用体外驱虫含<b>氯菊酯（permethrin）</b>，对猫是<b>致命</b>的 —— 猫肝脏缺少分解它的酶，误用会抽搐、死亡。买之前把包装翻过来，确认写的是「猫用」。<br>
+    滴剂滴在<b>后颈舔不到的位置</b>，滴完<b>两只分开关着直到药干</b>（30~60 分钟）—— 互相舔会中毒，而且药也白滴了。48 小时内不洗澡。
+  </div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">四周阶梯</span><h2>每顿多少克</h2><div class="m">全干粮基准<br>早 40% · 晚 35% · 夜 25%</div></div>
+  <div class="scroller"><table class="wk" id="ladtable"></table></div>
+  <div class="note">
+    <b id="tbl-a">猫 1</b> 的量按周往下走；<b id="tbl-b">猫 2</b> 的量<b>跟体重走、不跟周数走</b> —— 每周把新体重填进设置，这一列会自己往上抬。
+  </div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">采购</span><h2>要买多少</h2></div>
+  <div class="dw" id="buy"></div>
+  <div class="note" id="buynote"></div>
+</section>
+
+<section class="card red">
+  <div class="ch"><span class="k">红线</span><h2>见到这些立刻停</h2></div>
+  <ul>
+    <li><b id="rl-a">猫 1</b> <b>连续 2 顿一口没碰</b>，或一天吃不到当天量的一半 —— 当天就把粮敞开给，同时联系医生。超重猫断食 2~3 天可能引发<b>脂肪肝</b>，这是会死猫的病。</li>
+    <li>出现<b>躲起来不出来、走路发飘、流口水、吐、耳朵内侧或牙龈发黄</b> —— 停掉计划，当天看医生。</li>
+    <li><b id="rl-b">猫 2</b> <b>掉秤</b>（比上周轻）—— 立刻把她的量加回去，别等下周。</li>
+    <li><b id="rl-a2">猫 1</b> <b>一周掉超过 <span class="n" id="rl-fast">75</span> g</b> —— 减太快了，加回上一周的量。</li>
+    <li>猫叫、扒门、踩你、半夜闹 —— <b>这不是红线，是正常的</b>。第 2~4 天最凶，一周内消停。<b>这时候喂一次，前面全白干。</b></li>
+  </ul>
+</section>
+
+<h3 class="sec">要弄明白的几件事</h3>
+
+<details class="ex" open>
+  <summary>罐头怎么算进去（记住一个数就够）</summary>
+  <div class="bd">
+    <p><b>日常就是三顿干粮。罐头是想给的时候给，给了就从当天干粮里扣掉相应的克数</b> —— 一天总热量不变，所以不影响减肥，也不影响长身体。</p>
+    <p><b class="rd">要记的就一个数：一罐 85 g ≈ 20 g 干粮。</b>两只猫都差不多（上面那张表按你填的实际热量算，以那个为准）。</p>
+    <p><b>为什么差这么多：罐头的热量密度只有干粮的四分之一。</b>干粮约 <span class="kbd">3.4~4.1 kcal/g</span>，罐头约 <span class="kbd">1.0 kcal/g</span>。<b>罐头七八成是水</b>，你付钱买的体积里大部分是水。</p>
+    <p><b class="rd">所以最容易翻车的是反过来那一面：以为罐头「没什么热量」，当零食额外加。</b><span id="ex-a">猫 1</span> 一整天总共才六十来克干粮 —— <b>一罐就顶掉她三分之一天</b>。额外加两罐，那天等于没减。</p>
+    <p><b>怎么操作：</b>在上面找到想换的那一顿，<b>点格子下面那条</b>，克数会自己变成罐头的量，当天剩下两顿照常给干粮。<b>只改当天，不改排期</b> —— 明天自动回到全干粮。</p>
+    <p><b>整顿换的话，哪顿合适是被体积决定的。</b>猫一顿能装下的量大约是<b>体重的 5%</b>：<span id="ex-cap">—</span>换算成罐头，<span id="ex-a2">猫 1</span> 换晚餐正好一罐上下；<span id="ex-b">猫 2</span> 只有夜宵那顿装得下，早晚两顿换罐头都超量 —— 她会剩，而<b>你会以为她挑食，其实是那一碗她物理上装不下</b>。换到超量的那顿，页面会当场弹红字。</p>
+    <p><b>两只猫的方向是反的：</b><br>
+    · <b>猫 1 要减肥</b> —— 罐头体积大热量低，吃着更饱。<b>她减不动的时候，与其继续砍热量，不如把某一顿改成罐头</b>：热量一样，体积翻四倍，比饿着她安全得多。<br>
+    · <b>猫 2 要长肉</b> —— 干粮体积小热量高，效率其实更高。<b>罐头给她的价值是适口性、水分和营养密度，不是热量</b>，所以她多给几罐是划算的。</p>
+    <p><b>不用算得很准。</b>差三五克无所谓，<b>别差一整罐</b>。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>她瘦，但毛好、肚子不鼓 —— 这说明什么</summary>
+  <div class="bd">
+    <p><b>这两条其实是在否掉寄生虫。</b></p>
+    <p><b>毛丝滑反光</b>，说明过去几个月<b>蛋白质和脂肪是够用的</b> —— 毛发几乎全是蛋白质，长期缺蛋白的猫毛会先干、失去光泽、然后打结。她毛好，等于一份回溯报告。</p>
+    <p><b>肚子不鼓</b>，基本排除了明显的蛔虫负担 —— 幼猫典型虫肚是"四肢细、肚子胀得像鼓"，她没有。</p>
+    <p><b>所以最可能的解释就是最简单的那个：她吃的是成猫减肥粮，热量本来就被压低，而她正在长身体。</b>不是病，是被饿着了。这反而是好消息 —— 换粮加罐头就能解决。</p>
+    <p><b>成猫减肥粮再怎么说也是「全价」的。</b>缺的主要是<b>脂肪密度和 DHA</b>，不是营养不良。而<b>猫的生长板要到 10~12 个月才闭合</b> —— 她还有至少四个月窗口，绝大多数猫能完全追回来。</p>
+    <p><b class="rd">但追赶生长靠的是营养质量，不是热量堆。</b>别为了"补回来"猛喂。长太快对关节不好，而且会直接养出第二只胖猫 —— 到时候你要同时给两只减肥。设置里的"偏瘦加成"已经加了一成，够了。</p>
+    <p><b>什么时候该改主意：</b>换粮加罐头之后<b>满 4 周还不长秤</b>。那时"吃少了"这个解释被推翻，该去医院<b>查粪便</b> —— 重点查<b>球虫和贾第鞭毛虫</b>，这两种<b>普通驱虫药杀不掉</b>，症状恰恰是吃得不少却不长肉，而且<b>不一定让肚子鼓</b>。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>驱虫到底多久一次（"每月一次"对你家不成立）</summary>
+  <div class="bd">
+    <p><b>"每月驱虫"是两种情况下的做法：幼猫期，和会出门的猫。</b></p>
+    <p>美国那套指南（CAPC）确实建议全年每月，但它针对的是<b>会出门、有跳蚤蜱虫、有心丝虫流行</b>的环境。欧洲那套（ESCCAP）是<b>按风险定</b>的 —— 纯室内、不吃生肉、没跳蚤的猫，<b>一年 2~4 次就够</b>。</p>
+    <p><b class="rd">驱虫药不是保健品，多做没有额外好处。</b>它是杀虫药，每次都有一点肝肾负担。没虫的时候每月驱，是白付这个代价。</p>
+    <p><b>看这几条，中了就加密：</b>会去户外或住一楼有院子 · 吃生肉生骨肉 · 家里有跳蚤（<b>跳蚤传绦虫</b>，见到跳蚤两只都要驱）· 家里有幼儿（蛔虫人畜共患）· 新猫进门或去过寄养。<br>
+    一条都不沾 → <b>每 3~6 个月一次</b>。沾了 → 每月一次，并问医生。</p>
+    <p><b>幼猫是例外，她刚过这一段：</b>标准是 3 周龄起每 2 周一次到 12 周龄，之后<b>每月一次到 6 月龄</b>。她现在正好半岁 —— 收尾做一次，然后转成猫节奏。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>买哪种驱虫药（附一个会死猫的坑）</summary>
+  <div class="bd">
+    <p><b class="rd">先说会死猫的：绝对不能用狗的体外驱虫药。</b>很多犬用产品含<b>氯菊酯（permethrin）</b> —— 猫肝脏缺少分解它的酶，误用会抽搐甚至死亡。<b>"反正都是宠物药，狗的分一半给猫"是会出人命的。</b>买之前翻过来看，必须写「猫用」。</p>
+    <p><b>滴后颈的（内外同驱，最省事）：</b><br>
+    · <b>大宠爱（Revolution，塞拉菌素）</b> —— 蛔虫、钩虫、耳螨、跳蚤、心丝虫。<b>不管绦虫。</b>按体重分管，<b>2.6~7.5 kg 是同一规格</b>，你家两只正好都在这一档。<br>
+    · <b>爱沃克（Advocate）</b> —— 覆盖接近，同样<b>不管绦虫</b>。<br>
+    · <b>博来恩（Broadline）</b> —— 多了吡喹酮，<b>连绦虫一起管</b>。家里有跳蚤、或猫会出门抓东西吃，选这个。</p>
+    <p><b>口服片（只管体内，绦虫覆盖全）：</b>拜宠清（Drontal 猫用）、米尔贝（Milbemax 猫用）。</p>
+    <p><b class="rd">剂量按包装上的体重档给，别照任何人转述的数字，包括我写的。</b>各家规格不一样，同牌子不同批次的分档也可能变。<b>做法：称出当天实际体重 → 翻包装对照表 → 选那一档。</b>猫的体重区间窄，差 0.5 kg 就可能跨档。正好借称重那天一起做。</p>
+    <p><b>两只同一天一起做。</b>只驱一只等于没驱 —— 虫会在两只之间来回传。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>为什么不能"先饿两天让她们学会"</summary>
+  <div class="bd">
+    <p>你的直觉能理解，但这一条对猫是反的。</p>
+    <p><b class="rd">大猫这边是真的有危险。</b>超重的猫连续两三天几乎不吃，肝脏会被动员来的脂肪塞住，叫<b>肝脏脂肪沉积</b>（脂肪肝）。坑在于<b>越胖越容易得，一开始就是恶性循环</b> —— 难受所以更不吃，更不吃就更严重。治起来要插食管，费用四位数起，救不回来的不少。狗饿几天没事，猫不行，这是猫独有的代谢弱点。</p>
+    <p><b>小猫现在更不能饿</b> —— 她本来就偏瘦，正在往回补。</p>
+    <p><b>更关键的是：饿根本不是让猫学会定时吃的机制。</b>猫学会的方式是<b>规律可预期</b> —— 饭在固定时间出现、放固定时长、然后消失。猫对时间的感知比人以为的准，几天就能摸清。饿出来的不是"我要一次吃完"，是焦虑、护食、见人就叫。<b>规律管用，饿不管用。</b></p>
+    <p>所以第一周<b>一克都不减</b>，只把自助餐拆成三顿。难的是这一周，但难的是你，不是猫。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>两只猫怎么分开喂（最容易翻车的地方）</summary>
+  <div class="bd">
+    <p><b>两只吃的不是同一种粮，这件事没做到，整个计划就废了。过去两个月已经演示过一遍</b> —— 小猫抢到的是减肥粮，结果就是她现在偏瘦。</p>
+    <p><b>办法一：分房间。免费，第一天就能用。</b><br>
+    到点，把小猫连碗一起放进一个房间（卫生间、次卧、阳台都行），关门。大猫在外面吃，你正好看着她。窗口一到，<b>两只同时收碗，然后同时开门</b>。<b>一定要同时</b> —— 先放出来的那只会直接去端另一只的碗。</p>
+    <p><b>办法二：微芯片喂食器。</b>一个五百到一千多，要两个。识别项圈或芯片，只给对的猫开盖。贵，但一劳永逸，出差也不用求人。</p>
+    <p><b>不推荐"一高一低"</b>（小猫放猫爬架顶）。五公斤的猫照样跳得上去，而且她可以等你走了再去把剩的吃掉。</p>
+    <p><b>加了罐头之后更要分开。</b>罐头香得多，抢食会更凶；而且<b>幼猫罐热量密度比成猫罐高</b>，被大猫吃到就是直接往回胖。</p>
+    <p><b>水碗不分。</b>24 小时敞开，最好两三个碗放不同房间，离猫砂盆远一点。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>怎么让干粮猫接受罐头（附换食表）</summary>
+  <div class="bd">
+    <p><b>吃惯干粮的猫第一次见罐头，拒绝是常事</b>，尤其成年猫。别当成"她不爱吃"，当成需要两三周的过渡。</p>
+    <p><b>换食表（换干粮、加罐头都按这个走）：</b><br>
+    第 1~2 天：新的占 <span class="kbd">1/4</span> ｜ 第 3~4 天：<span class="kbd">1/2</span> ｜ 第 5~6 天：<span class="kbd">3/4</span> ｜ 第 7 天：全换<br>
+    <b>拉稀就退回上一档，待两天再往前。</b>幼猫更敏感，慢一点没关系。</p>
+    <p><b>换干粮</b>要走完这张表。<b>罐头不用</b> —— 它是偶尔给的，第一次先给小半罐看看拉不拉肚子，没事下次再给整顿的量。</p>
+    <p><b>她不吃罐头，按这个顺序试：</b><br>
+    · <b>加热到接近体温（35~38℃）。这一条最有效</b> —— 猫的本能是吃刚捕到的猎物，<b>冷食几乎不出味</b>。隔水温或兑一点温水，别用微波炉（受热不均会烫嘴）。<br>
+    · 先只在干粮旁边放一小勺，不强求。<br>
+    · 把罐头汁淋在干粮上，先习惯味道。<br>
+    · <b>别在她最饿的那顿硬塞</b> —— 极度饥饿时接触新食物，猫反而会形成长期反感。<br>
+    · 换质地试：慕斯、肉泥、肉丝。猫对口感的固执程度超过对味道。</p>
+    <p><b>可以花两三周慢慢来。</b>她们已经在适应"定时吃饭"这个更大的改变了，两件事别同时上强度。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>头一周会发生什么（有时间表）</summary>
+  <div class="bd">
+    <p><b>第 1~2 天：</b>基本没反应。碗里没粮会去闻一圈，然后去别处睡。</p>
+    <p><b>第 2~4 天：最难受的三天。</b>叫、跟着你走、扒厨房门、跳台面、半夜上床踩你脸。这是在测试"以前这样管用吗"。<b>这三天你唯一要做的事就是什么都不做。</b></p>
+    <p><b>第 5~7 天：</b>明显消停。开始<b>提前十几分钟在厨房等</b> —— 这不是饿坏了，这是学会了。</p>
+    <p><b>第 2 周起：</b>进入状态。很多猫这时反而比自助餐时期安静，因为不用再时刻惦记碗里有没有。</p>
+    <p><b class="rd">整个过程只有一条规矩：不在饭点以外给任何吃的。</b>零食、猫条、掉地上的一块鸡肉，都不行。<b>破例一次，等于教会她"叫够久就有饭"</b> —— 下次她会叫得更久，因为她知道有希望。这叫间歇强化，是最难消除的那种习惯。</p>
+    <p><b>晚上被吵醒：</b>别抱、别骂、别开灯、别开门，完全不反应最快。骂也是反应，对猫来说"有反应"就是奖励。真受不了就关卧室门塞耳塞，三四个晚上的事。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>每顿都剩 / 一口不吃 / 抢食，分别怎么办</summary>
+  <div class="bd">
+    <p><b>剩一点点（吃了大半）：</b>正常，前两周尤其正常。<b>照收不误，不加不减。</b></p>
+    <p><b>连续三顿明显剩 —— 先查是不是那一碗物理上太大了。</b>看上面的格子有没有弹红字。罐头那顿最容易超，因为体积是干粮的四倍。不是量的问题就查：碗太深（猫胡子碰碗壁不舒服，换浅口宽碗）、位置吵或挨着猫砂盆、干粮开袋太久跑味。</p>
+    <p><b class="rd">一口没碰：</b>标成"一口没碰"。大猫连续两顿没碰就走红线。<b>小猫一顿没碰就要注意，两顿就打电话。</b></p>
+    <p><b>狼吞虎咽然后吐：</b>吃太快。<b>慢食碗</b>或把粮摊平盘上，几十块解决。吐<b>整粒粮</b>＝吃太快；吐<b>黄水</b>＝空腹太久。</p>
+    <p><b>吃完去抢另一只的：</b>分房没做到位，或开门太早。窗口结束<b>先收碗，再同时开门</b>。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>秤的问题：体重秤不够用</summary>
+  <div class="bd">
+    <p>这个计划靠<b>每周称重</b>调克数，但要追的变化很小。</p>
+    <p>大猫一周正常掉 <b class="n">25~50 g</b>。家用体重秤最小刻度 <b class="n">100 g</b>，还要"抱猫称一次、自己称一次、相减" —— 两次各带误差，合起来可能 <b class="n">±200 g</b>。<b>误差比要测的变化大好几倍，等于什么也没测到。</b></p>
+    <p><b>要一个婴儿秤或宠物秤</b>，精度 5~10 g，百来块钱。没有它，这个计划的反馈环是断的。</p>
+    <p><b>实在不买就两周称一次</b>（同一个秤、同一个姿势）。两周变化 50~100 g，勉强能从误差里冒出头。<b>但别用体重秤按周称然后照着调量</b> —— 那是在噪音上做决定。</p>
+    <p><b>规矩：</b>固定周几、固定早上第一顿之前、空腹。<b>驱虫也按当天实际体重选规格</b>，正好一起做。</p>
+    <p><b>另外要一个厨房秤</b>（精度 1 g，几十块）。上面那些克数不是用勺子量得出来的 —— 同一勺猫粮，抖一抖差 5 g，而大猫一天总共才吃四十几克。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>干粮怎么存（这两袋撑得比你想的久）</summary>
+  <div class="bd">
+    <p id="stor-line">—</p>
+    <p><b>干粮开袋后最好 4~6 周吃完。</b>不是会坏，是<b>脂肪会氧化</b> —— 猫粮外层喷的油脂正是香味来源，氧化后味道变淡发哈，同时维生素 A、E 降解。结果是<b>猫越来越不爱吃，而你会以为她挑食或者不舒服</b>，排查方向完全找错。</p>
+    <p><b class="rd">所以这两袋必须分装，不是建议。</b><b>按半个月一份</b>（不是一个月）—— 开着的那份 15 天吃完，离 4~6 周的线还有富余。</p>
+    <p id="stor-bag">—</p>
+    <p><b class="rd">袋子要买铝箔的，不透光那种。别买透明塑料自封袋。</b>你要防的是<b>脂肪氧化</b>，不是受潮 —— 透明 PE 袋阻氧性很差，光还会加速氧化，装进去等于没分装。</p>
+    <p><b>每个袋子用记号笔写两行：批号（从原袋抄）＋ 开袋日期。</b>开袋日期是你真正会用到的那个，它告诉你这袋还剩几天该吃完。<b>原袋留一个空的压扁收着</b>，直到这批粮吃完再扔。</p>
+    <p><b>没开的避光阴凉放，别放冰箱</b> —— 拿进拿出会结露，比放外面还糟。<b>正在吃的那份别倒进塑料储粮桶</b>，塑料吸油，久了本身有哈味会串给新粮。</p>
+    <p><b>罐头开了没吃完：</b>盖上冷藏，<b>2 天内用完</b>，喂之前<b>回温到接近体温</b>。更省事的是<b>买小罐（80~85 g）</b>，一罐正好一顿。</p>
+    <p><b>小猫满一岁（约 <span id="st-adult">2027 年 3 月</span>）换成猫粮</b>，那时幼猫粮也差不多吃完，时间对得上。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>这些克数是怎么算出来的</summary>
+  <div class="bd">
+    <p>不藏公式，因为你早晚要自己调。</p>
+    <p><b>第一步：静息能量</b>（猫躺着不动一天烧多少）<br>
+    <span class="kbd">RER = 70 × 体重(kg) ^ 0.75</span><br>
+    兽医营养学的标准式子，指数 0.75 是跨物种代谢率的经验规律。</p>
+    <p><b>第二步：乘系数。</b><br>
+    · 大猫（绝育成猫、减肥）：按<b>目标体重</b>算 RER，再 ×1.0。用目标体重而非当前体重，是减肥方案的通行做法 —— 直接砍当前体重的热量容易砍过头。<br>
+    · 小猫（生长期）：按<b>当前体重</b>算 RER，6~8 月龄 ×2.0，9~10 月龄 ×1.9，11 月起 ×1.8，满一岁转成猫。<b>"偏瘦加成"再乘 1.1。</b></p>
+    <p><b>第三步：把一天的热量按 40% / 35% / 25% 分到三顿，然后每顿除以那一顿吃的那种粮的热量密度。</b>所以同样是 35% 的一顿，给干粮是几十克，给罐头是上百克 —— 差的就是那四倍。</p>
+    <p><b class="rd">设置里那几个 kcal 是默认值，不是你手上那几袋那几罐的实测值。</b>翻包装背面找"代谢能"或"ME"填进去，上面所有克数会跟着重算。<br>
+    换算：写 <span class="kbd">kJ/kg</span> 除以 4.184；写 <span class="kbd">kcal/100g</span> 乘 10。</p>
+    <p><b class="rd">最重要的一句：克数是估的，体重是量的。</b>公式给的是起点，不是答案。真正定量的是每周那个秤 —— 两个月后你调出来的数会比任何公式都准。<b>秤和表冲突，听秤的。</b></p>
+    <p><b>为什么早上给得最多：</b>早上到晚上是全天最长的空档，<b>12 小时</b>。夜宵给得少，是为了让早上有点饿 —— 饿一点才吃得快，才容易养成"到点吃完"。</p>
+  </div>
+</details>
+
+<details class="ex">
+  <summary>预计多久见效，以及每月花多少钱</summary>
+  <div class="bd">
+    <p><b>习惯：1~2 周。</b>第二周基本定型。</p>
+    <p><b class="rd">减重：半年以上。</b>按现在这个量，大猫一周掉约 <b class="n">25 g</b>，从 <span class="n" id="ef-from">5.0</span> kg 到 <span class="n" id="ef-to">4.3</span> kg 要 <b class="n" id="ef-wk">28</b> 周左右。</p>
+    <p>这个速度是<b>故意设慢的</b>。猫安全的减重上限是每周 1% 体重，超过就往脂肪肝上撞。起点放在 0.5%，等秤连着几周有数了再往下压。</p>
+    <p><b>所以前一个月你大概率看不出她瘦了。</b>一个月掉 100 g，摸都摸不出来。<b>这时候唯一能信的是秤，不是眼睛，更不是手感。</b>心急加大力度是这件事上最常见的翻车方式。</p>
+    <p><b>小猫方向相反 —— 她该涨。</b>正常每周涨 <b class="n">50~100 g</b>，四周之内应该看得见。</p>
+    <p><b>钱：</b>罐头按你实际开的算 —— 设置里填「一周大概开几罐」，「采购」那张卡就会给出每月多少罐、多少钱。<b>要多给就多给小猫的</b>，她在补身子；大猫的罐头只是饱腹感，少给没关系。</p>
+    <p><b>大猫有个下限不能破：每天总热量不能低于 <span class="n" id="st-floor">167</span> kcal。</b>再往下要有医生看着 —— 那个量已经不够维持基本代谢和蛋白质需求，掉的会是肌肉不是脂肪。页面里已经拦住了，微调按钮点不下去就是到底了。</p>
+  </div>
+</details>
+
+<section class="card">
+  <div class="ch"><span class="k">健康记事</span><h2>随手记一笔</h2><div class="m" id="notem">—</div></div>
+  <div class="nadd">
+    <div class="chips" id="ntags">
+      <button class="chip" data-tag="疫苗" type="button">疫苗</button>
+      <button class="chip" data-tag="驱虫" type="button">驱虫</button>
+      <button class="chip" data-tag="看病" type="button">看病</button>
+      <button class="chip" data-tag="用药" type="button">用药</button>
+      <button class="chip" data-tag="体检" type="button">体检</button>
+      <button class="chip" data-tag="换粮" type="button">换粮</button>
+      <button class="chip" data-tag="吐了" type="button">吐了</button>
+      <button class="chip" data-tag="软便" type="button">软便</button>
+      <button class="chip on" data-tag="其他" type="button">其他</button>
+    </div>
+    <div class="chips" id="nwho">
+      <button class="chip" id="nw-a" data-who="a" type="button">猫 1</button>
+      <button class="chip" id="nw-b" data-who="b" type="button">猫 2</button>
+      <button class="chip on" data-who="" type="button">两只</button>
+    </div>
+    <div class="nrow">
+      <input id="ntext" type="text" placeholder="比如：三联疫苗，左后腿" aria-label="记事内容">
+      <button id="nadd" type="button">记下</button>
+    </div>
+    <div class="nhint" id="nhint">—</div>
+  </div>
+  <div id="nlist"></div>
+</section>
+
+<section class="card">
+  <div class="ch"><span class="k">记录</span><h2>一辈子的账</h2><div class="m" id="logm">—</div></div>
+  <div class="dw" id="logstat"></div>
+  <div class="scroller"><table class="wk" id="logtable"></table></div>
+  <div class="note">
+    <button id="dl" class="dlbtn" type="button">导出全部记录（CSV）</button>
+    <div class="impwrap">
+      <button id="bk" class="dlbtn" type="button">导出备份（JSON）</button>
+      <button id="imp" class="dlbtn" type="button">从备份恢复</button>
+    </div>
+    <input id="impf" type="file" accept=".json,application/json" hidden aria-label="选择备份文件">
+    <textarea id="dlta" hidden readonly aria-label="记录内容"></textarea>
+    <div id="dlnote"><b>CSV</b>：一天一行 —— 每顿克数、干粮还是罐头、吃完没有、当天体重、当天记事。
+      Excel、Numbers、发给医生都能直接打开，但<b>只能看，导不回来</b>。<br>
+      <b>JSON 备份</b>：能原样恢复的那一份，换设备、重装、页面出事都靠它。<b>每年存一次到自己的硬盘或网盘</b> ——
+      任何在线的东西都不该是唯一一份，这话对这个页面也成立。</div>
+  </div>
+</section>
+
+<section class="card" id="ghcard" hidden>
+  <div class="ch"><span class="k">云同步</span><h2>手机电脑同一份</h2><div class="m" id="ghm">没连</div></div>
+  <div class="note">
+    <div id="ghoff">
+      <div class="ghlab">你的私有仓库</div>
+      <input id="ghrepo" class="ghin" type="text" autocomplete="off" autocapitalize="none"
+        autocorrect="off" spellcheck="false" placeholder="用户名/catfeed-data" aria-label="仓库">
+      <div class="ghlab">访问令牌 · 只留在这台设备上</div>
+      <input id="ghtok" class="ghin" type="password" autocomplete="off" autocapitalize="none"
+        autocorrect="off" spellcheck="false" placeholder="github_pat_…" aria-label="访问令牌">
+      <div class="ghrow"><button id="ghgo" class="dlbtn" type="button">连接</button></div>
+    </div>
+    <div id="ghon" hidden>
+      <div id="ghwho"></div>
+      <div class="ghrow">
+        <button id="ghnow" class="dlbtn" type="button">立即同步</button>
+        <button id="ghcut" class="dlbtn" type="button">断开这台设备</button>
+      </div>
+    </div>
+    <div id="ghstat"></div>
+    <details class="ex" style="margin:12px 0 0">
+      <summary>第一次怎么设 · 大概三分钟</summary>
+      <div class="bd">
+        <p><b>1 · 建一个私有仓库放数据</b><br>
+        打开 <span class="kbd">github.com/new</span> → 名字填 <span class="kbd">catfeed-data</span> →
+        选 <b class="rd">Private</b>（一定要私有，里面是你家猫的记录）→
+        勾上 <span class="kbd">Add a README file</span> → Create repository。</p>
+        <p><b>2 · 建一把只能开这个仓库的钥匙</b><br>
+        打开 <span class="kbd">github.com/settings/personal-access-tokens</span>（找不到就走菜单：
+        头像 → Settings → 左边拉到最底 Developer settings → Personal access tokens →
+        <b>Fine-grained tokens</b>）→ Generate new token，然后：</p>
+        <p>· <b>Token name</b>：随便写，比如 catfeed<br>
+        · <b>Expiration</b>：选 <span class="kbd">No expiration</span> —— 这是要用一辈子的，
+        别让它一年后突然停掉<br>
+        · <b>Repository access</b>：选 <span class="kbd">Only select repositories</span>，
+        只勾 <span class="kbd">catfeed-data</span><br>
+        · <b>Permissions</b> → Repository permissions → 往下找到 <span class="kbd">Contents</span>，
+        右边改成 <span class="kbd">Read and write</span><br>
+        · 拉到底 Generate token → <b class="rd">把那串字复制下来，它只显示这一次</b></p>
+        <p><b>3 · 回到这一页</b><br>
+        仓库填 <span class="kbd">你的用户名/catfeed-data</span>，令牌粘进去，点连接。</p>
+        <p><b>4 · 另一台设备</b>：打开同一个网址，填一样的仓库和令牌。两边从此就是同一份。</p>
+        <p><b>为什么要这么麻烦：</b>同步一定得有个地方存东西。存在别人家的数据库上，
+        哪天人家关门你就没了 —— 那正是你当初不想挂靠的原因。存进你自己的私有仓库，
+        东西在你名下，<b>而且每同步一次就是一次存档，哪天点错了还能翻回去看</b>。</p>
+        <p><b>这把钥匙能干什么：</b>只能读写 catfeed-data 这一个仓库，别的一概碰不到。
+        手机丢了，去 GitHub 那一页点 Revoke，钥匙当场作废，记录一条不少。</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="card" style="margin-top:20px">
+  <div class="ch"><span class="k">设置</span><h2>改这里，上面全部重算</h2></div>
+  <div class="set" id="setgrid"></div>
+</section>
+
+<p class="foot">
+  <span id="syncnote">数据存在这台设备上</span><br>
+  这不是医疗建议。任何一只有基础病、在吃药，或者你不确定该不该这么做，先问兽医。<br>
+  驱虫药剂量以包装说明为准。
+</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var MEALS=[{k:"早餐",r:.40},{k:"晚餐",r:.35},{k:"夜宵",r:.25}];
+var KIT  =[{k:"早餐",r:.38},{k:"晚餐",r:.34},{k:"夜宵",r:.28}];
+var WD=["周日","周一","周二","周三","周四","周五","周六"];
+var PHASES=[
+ {n:"拆自助餐",win:30,body:
+  "<p><b>这一周只改一件事：把自助碗撤掉，改成三顿。</b>量一克不减 —— 上面的克数基本就是维持量，这周不是在减肥，是在改规矩。</p>"+
+  "<p>到点放碗，<b>30 分钟</b>后连碗一起收走，只留水。中间猫走开又回来，都算在这 30 分钟里。</p>"+
+  "<p><b class='rd'>整周唯一的禁令：饭点以外不给任何吃的。</b>一次都不行。第 2~4 天叫得最凶，第 7 天前后消停。</p>"+
+  "<p><b class='rd'>这一周先别开罐头。</b>改饭点本身就是个大变动，别两件事同时上强度。"+
+  "等她们进入状态了（第 2~3 周）再开第一罐 —— 那时候也更容易看出是哪件事起的作用。</p>"},
+ {n:"收窗口",win:25,body:
+  "<p>窗口从 30 分钟收到 <b>25 分钟</b>。大猫的量第一次下调（约 4%），小猫按她这周的体重走。</p>"+
+  "<p>这周你会看到<b>她们提前在厨房等</b> —— 这是学会了的标志，不是饿坏了。</p>"+
+  "<p>开始每周固定一天称重。<b>下面的判读会自动告诉你该加还是该减。</b></p>"},
+ {n:"再收五分钟",win:20,body:
+  "<p>窗口收到 <b>20 分钟</b>，之后一直是这个数。猫正常吃一顿本来就是 10~15 分钟。</p>"+
+  "<p>还是每顿都剩的话，<b>先别减量</b> —— 翻上面「每顿都剩」那节，先排除那一碗体积太大。</p>"+
+  "<p><b>这周可以开罐头了。</b>第一次先给小半罐，看看拉不拉肚子。小猫的秤这周该往上走了，"+
+  "没有的话看「她瘦，但毛好」那节最后一段。</p>"},
+ {n:"克数到位",win:20,body:
+  "<p>大猫降到目标量，<b>按周期递减到此为止</b>。从下周起不看这张表，只看秤。</p>"+
+  "<p><b>小猫满 4 周了 —— 第一个检查点。</b>她应该已经涨了 200~400 g。一点没动就该去查粪便了（球虫、贾第虫，普通驱虫药杀不掉）。</p>"},
+ {n:"常规运行",win:20,body:
+  "<p>过渡期结束。往后只做两件事：<b>每周同一天早上空腹称重</b>，然后照判读调。</p>"+
+  "<p><b>秤和表冲突，听秤的。</b>公式只是起点，两个月后你调出来的数比任何公式都准。</p>"+
+  "<p><b class='rd'>这一段没有终点，会跑半年以上。</b>周数会一直往下数（第 12 周、第 30 周），"+
+  "但做法不再变了 —— 上面「离目标还有多少」那行会告诉你走到哪儿了。"+
+  "<b>别盯每周的绝对值，看四周的趋势。</b></p>"+
+  "<p>大猫到目标体重后，把每天的量加回约 10%，改成两周称一次，别让她反弹。</p>"}
+];
+
+/* ══════════ 状态 ══════════ */
+var KEY="catfeed.v3";
+var D={
+  start:"2026-09-14",
+  na:"美短", nb:"阿比",
+  /* 日常＝三顿全干粮。罐头是临时换的，记在当天的 marks 里（f+猫+顿序），不是排期 */
+  akg:5.0, atgt:4.3, adens:3400, awdens:80, acang:85, acany:10, acanwk:2, aadj:0,
+  bkg:2.8, bbirth:"2026-03-14", bdens:4100, bwdens:100, bcang:85, bcany:12, bcanwk:4, badj:0,
+  bboost:1,
+  dwlast:"", dwevery:3,
+  t0:"07:00", t1:"19:00", t2:"22:30",
+  marks:{}, wa:{}, wb:{}, notes:{}, years:[], upd:0
+};
+/* 设置类的键 —— 存 state/main；日记录按年存 log/2026、log/2027…
+   为什么要拆：一份文档装一辈子的话，每点一下都要把整段历史重写一遍，越用越慢。 */
+var SETK=["start","na","nb","akg","atgt","adens","awdens","acang","acany","acanwk","aadj",
+ "bkg","bbirth","bdens","bwdens","bcang","bcany","bcanwk","badj","bboost",
+ "dwlast","dwevery","t0","t1","t2"];
+function yr(d){return String(d).slice(0,4);}
+var SECT=["marks","wa","wb","notes"];   /* 按日期存的都在这儿 —— 加新的只改这一行 */
+function norm(){
+  ["akg","atgt","adens","awdens","acang","acany","acanwk","aadj",
+   "bkg","bdens","bwdens","bcang","bcany","bcanwk","badj","dwevery"].forEach(function(k){
+    var v=parseFloat(D[k]); if(!isNaN(v)) D[k]=v;
+  });
+  ["wa","wb"].forEach(function(s){
+    for(var d in D[s]){ var v=parseFloat(D[s][d]); if(isNaN(v)) delete D[s][d]; else D[s][d]=v; }
+  });
+  D.bboost=D.bboost?1:0;
+  if(!Array.isArray(D.years)) D.years=[];
+  if(!D.notes||typeof D.notes!=="object") D.notes={};
+  for(var nd in D.notes) if(!Array.isArray(D.notes[nd])||!D.notes[nd].length) delete D.notes[nd];
+}
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);for(var k in D)if(p[k]!==undefined)D[k]=p[k];}}catch(e){}
+norm();
+
+var dbH=null, docRef=null, quiet=false;
+function yearsFromData(){
+  var o={};
+  SECT.forEach(function(sec){ for(var d in D[sec]) o[yr(d)]=1; });
+  o[yr(D.start)]=1; o[yr(today)]=1;
+  return Object.keys(o).sort();
+}
+function settingsOnly(){
+  var o={upd:D.upd,years:D.years};
+  SETK.forEach(function(k){o[k]=D[k];});
+  return o;
+}
+function yearSlice(y){
+  var o={upd:D.upd};
+  SECT.forEach(function(sec){ o[sec]={};
+    for(var d in D[sec]) if(yr(d)===y) o[sec][d]=D[sec][d]; });
+  return o;
+}
+function save(){
+  D.upd=Date.now();
+  D.years=yearsFromData();
+  try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}   /* 本地永远存整份，是兜底 */
+  ghQueue();                       /* 攒一下再推去 GitHub；没连就是空转 */
+  if(!dbH) return;
+  quiet=true;
+  var y=yr(cur);
+  Promise.all([docRef.set(settingsOnly()), dbH.doc("log/"+y).set(yearSlice(y))])
+    .catch(function(){}).then(function(){ setTimeout(function(){quiet=false;},400); });
+}
+/* 记下这一天真正放下去的克数 —— 以后改了目标体重，也不会把旧记录一起改掉 */
+function stamp(){
+  var m=mk(cur), pa=planFor("a",cur), pb=planFor("b",cur);
+  m.g=[pa.meals[0].g,pa.meals[1].g,pa.meals[2].g,pb.meals[0].g,pb.meals[1].g,pb.meals[2].g];
+  m.w=[pa.meals[0].wet?1:0,pa.meals[1].wet?1:0,pa.meals[2].wet?1:0,
+       pb.meals[0].wet?1:0,pb.meals[1].wet?1:0,pb.meals[2].wet?1:0];
+}
+
+/* ══════════ 工具 ══════════ */
+function d2s(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function s2d(s){var p=String(s).split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function addD(s,n){var d=s2d(s);d.setDate(d.getDate()+n);return d2s(d);}
+function addM(s,n){var d=s2d(s);d.setMonth(d.getMonth()+n);return d2s(d);}
+function dayDiff(a,b){return Math.round((s2d(b)-s2d(a))/86400000);}
+function rer(kg){return 70*Math.pow(kg,.75);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function weekOf(date){var d=dayDiff(D.start,date); return d<0?1:Math.min(5,Math.floor(d/7)+1);}
+function weekNo(date){var d=dayDiff(D.start,date); return d<0?1:Math.floor(d/7)+1;}  /* 真实周数，不封顶 */
+function ageMonths(date){return dayDiff(D.bbirth,date)/30.4375;}
+function kitFactor(m){ if(m<6)return 2.5; if(m<9)return 2.0; if(m<11)return 1.9; if(m<12)return 1.8; return 1.2; }
+function floorK(){return rer(D.atgt)*0.8;}
+
+/* 一天总热量 */
+function kcalA(date){
+  var w=weekOf(date), start=rer(D.akg), goal=rer(D.atgt);
+  var kc=start+(goal-start)*Math.min(w-1,3)/3+(+D.aadj||0);
+  return Math.max(floorK(),kc);                   /* 不许破下限 */
+}
+function kcalB(date){
+  return Math.max(30, rer(D.bkg)*kitFactor(ageMonths(date))*(D.bboost?1.1:1)+(+D.badj||0));
+}
+/* 每克多少千卡：干粮按 kcal/kg，罐头按 kcal/100g */
+function dens(who,isWet){
+  if(who==="a") return isWet?((+D.awdens||80)/100):((+D.adens||3400)/1000);
+  return isWet?((+D.bwdens||100)/100):((+D.bdens||4100)/1000);
+}
+/* 一天拆成三顿：每顿 = 该顿热量 ÷ 那顿吃的那种粮的密度 */
+function planFor(who,date,fd){
+  var kc=(who==="a")?kcalA(date):kcalB(date);
+  var rs=(who==="a")?MEALS:KIT;
+  if(!fd){ var mm=D.marks[date]||{};
+    fd=[0,1,2].map(function(j){return mm["f"+who+j]?1:0;}); }   /* 当天临时开的罐头 */
+  var bw=((who==="a")?(+D.akg):(+D.bkg))*1000;
+  var out={kc:kc,meals:[],dry:0,wet:0,over:false};
+  for(var i=0;i<3;i++){
+    var wet=!!fd[i], g=Math.round(kc*rs[i].r/dens(who,wet));
+    var over=g>bw*0.035;                           /* 一顿超过体重 3.5% → 大概率吃不完 */
+    if(over) out.over=true;
+    if(wet) out.wet+=g; else out.dry+=g;
+    out.meals.push({g:g,wet:wet,over:over,cap:Math.round(bw*0.05)});
+  }
+  return out;
+}
+function times(){return [D.t0,D.t1,D.t2];}
+function tmin(t){var p=String(t).split(":");return (+p[0])*60+(+p[1]||0);}
+
+/* ══════════ 渲染 ══════════ */
+var today=d2s(new Date()), cur=today;
+function mk(date){ return D.marks[date]||(D.marks[date]={}); }
+function set(id,v){var e=document.getElementById(id); if(e) e.textContent=v;}
+function setH(id,v){var e=document.getElementById(id); if(e) e.innerHTML=v;}
+
+function render(){
+  var w=weekOf(cur), ph=PHASES[w-1];
+  var pa=planFor("a",cur), pb=planFor("b",cur), ts=times();
+
+  var wnow=weekOf(today);
+  set("wkno", "第 "+weekNo(today)+" 周");
+  set("wkname", PHASES[wnow-1].n);
+  var lad="";
+  for(var i=1;i<=5;i++)
+    lad+='<div class="rung '+(i<wnow?"done":(i===wnow?"now":""))+'"><i></i><span>'+
+      (i<5?("W"+i+" "+PHASES[i-1].n):"常规")+'</span></div>';
+  document.getElementById("ladder").innerHTML=lad;
+
+  renderNext();
+
+  var dd=s2d(cur);
+  setH("curdate",(dd.getMonth()+1)+"月"+dd.getDate()+"日 "+WD[dd.getDay()]+
+    (cur===today?'<span class="pill">今天</span>':''));
+  var dn=dayDiff(D.start,cur);
+  set("curmeta", dn<0?"计划还没开始":"第 "+(dn+1)+" 天 · 第 "+weekNo(cur)+" 周 · "+ph.n);
+  set("todaym","窗口 "+ph.win+" 分钟");
+
+  var m=mk(cur), html="", labs=["","· 光盘","· 有剩","· 一口没碰"];
+  for(var j=0;j<3;j++){
+    var wa=pa.meals[j], wb=pb.meals[j], warn="";
+    if(wa.over) warn+='<div class="volwarn"><b>'+esc(D.na)+' '+MEALS[j].k+' '+wa.g+
+      ' g 太多了</b> —— 她一顿大约只装得下 '+wa.cap+' g，二十分钟吃不完。把这顿换回干粮，或者把罐头挪到份额更小的一顿。</div>';
+    if(wb.over) warn+='<div class="volwarn"><b>'+esc(D.nb)+' '+MEALS[j].k+' '+wb.g+
+      ' g 太多了</b> —— 她一顿大约只装得下 '+wb.cap+' g。罐头挪到份额最小的那顿（夜宵）试试。</div>';
+    html+='<div class="meal">'+
+      '<div class="meal-h"><b>'+MEALS[j].k+'</b><span class="tm">'+ts[j]+'</span>'+
+        '<span class="pc">'+Math.round(MEALS[j].r*100)+'% / '+Math.round(KIT[j].r*100)+'%</span></div>'+
+      '<div class="cells">'+
+        cell("a",j,m["a"+j]||0,wa,D.na,labs)+
+        cell("b",j,m["b"+j]||0,wb,D.nb,labs)+warn+
+      '</div></div>';
+  }
+  document.getElementById("meals").innerHTML=html;
+
+  setH("dayfoot",
+    '<span class="ta">'+esc(D.na)+' 全天 <b>'+Math.round(pa.kc)+'</b> kcal'+
+      (pa.dry?' · 干 <b>'+pa.dry+'</b> g':'')+(pa.wet?' · 罐 <b>'+pa.wet+'</b> g':'')+'</span>'+
+    '<span class="tb">'+esc(D.nb)+' 全天 <b>'+Math.round(pb.kc)+'</b> kcal'+
+      (pb.dry?' · 干 <b>'+pb.dry+'</b> g':'')+(pb.wet?' · 罐 <b>'+pb.wet+'</b> g':'')+'</span>');
+
+  setH("phase",
+    '<div class="ch"><span class="k">第 '+weekNo(cur)+' 周</span><h2>'+ph.n+'</h2>'+
+      '<div class="m">窗口 '+ph.win+' 分钟</div></div>'+
+    '<div class="tagrow">'+
+      '<span class="tag">'+esc(D.na)+' <b>'+Math.round(pa.kc)+'</b> kcal/天</span>'+
+      '<span class="tag">'+esc(D.nb)+' <b>'+Math.round(pb.kc)+'</b> kcal/天</span>'+
+      '<span class="tag">到点收走 <b>'+ph.win+'</b> 分钟</span>'+
+    '</div><div class="ph-body">'+ph.body+'</div>');
+
+  renderWeights(); renderDeworm(); renderTable(); renderSwap(); renderBuy();
+  renderLog(); renderNotes(); renderStats(); renderNames();
+}
+
+function cell(who,j,state,mi,name,labs){
+  var food=mi.wet?"罐头":"干粮", other=mi.wet?"干粮":"罐头";
+  return '<div class="cell c'+who+(state?" s"+state:"")+(mi.wet?" wet":"")+'">'+
+    '<button class="cmain" data-c="'+who+'" data-j="'+j+'" '+
+      'aria-label="'+esc(name)+' '+MEALS[j].k+' '+mi.g+'克'+food+'，点一下换状态">'+
+      '<span class="hd"><span class="nm">'+esc(name)+'<em>'+labs[state]+'</em></span>'+
+        '<span class="bx"></span></span>'+
+      '<span class="amt"><b>'+mi.g+'</b><u>g</u></span></button>'+
+    '<button class="fchip" data-f="'+who+'" data-j="'+j+'" '+
+      'aria-label="'+(mi.wet?"改回干粮":"今天这顿改罐头")+'"><b>'+food+'</b>'+
+      '<span>'+(mi.wet?"← 改回干粮":"今天改罐头 →")+'</span></button>'+
+  '</div>';
+}
+
+function renderNext(){
+  var now=new Date(), nowM=now.getHours()*60+now.getMinutes(), ts=times();
+  var idx=-1, dateFor=today;
+  for(var i=0;i<3;i++){ if(tmin(ts[i])>nowM){ idx=i; break; } }
+  if(idx<0){ idx=0; dateFor=addD(today,1); }
+  var pa=planFor("a",dateFor).meals[idx], pb=planFor("b",dateFor).meals[idx];
+  var win=PHASES[weekOf(dateFor)-1].win;
+  var diff=tmin(ts[idx])-nowM; if(dateFor!==today) diff+=1440;
+  var hh=Math.floor(diff/60), mm=diff%60;
+  function blk(cls,name,mi,wetLbl,dryLbl){
+    return '<div class="'+cls+'"><div class="who">'+esc(name)+'</div>'+
+      '<div class="gg">'+mi.g+'<u>g</u></div>'+
+      '<div class="fd">'+(mi.wet?"罐头":"干粮")+'</div>'+
+      '<div class="fd2">'+(mi.wet?wetLbl:dryLbl)+'</div></div>';
+  }
+  setH("next",
+    '<div class="next-h"><b>下一顿 · '+MEALS[idx].k+'</b><span class="t n">'+ts[idx]+'</span>'+
+      '<span class="in">'+(dateFor!==today?"明天 · ":"")+
+      (hh>0?("还有 "+hh+" 小时 "+mm+" 分"):("还有 "+mm+" 分钟"))+'</span></div>'+
+    '<div class="next-g">'+blk("ca",D.na,pa,"成猫全价主食罐","冠能减肥粮")+
+      blk("cb",D.nb,pb,"幼猫全价主食罐","冠能幼猫粮")+'</div>'+
+    '<div class="next-f">一顿只给一种 · 分开两个房间 · <b>'+win+
+      ' 分钟</b>后两只同时收碗、同时开门 · 水碗不收</div>');
+}
+
+/* ── 称重 ── */
+function lastTwo(o){
+  var ks=Object.keys(o).filter(function(k){return o[k]!==undefined&&o[k]!==null&&o[k]!=="";}).sort();
+  return ks.length<2?null:[ks[ks.length-2],ks[ks.length-1]];
+}
+function verdictA(){
+  var lt=lastTwo(D.wa);
+  if(!lt) return {c:"",h:"第一次称重记下来就行。<b>下周同一天同一时间</b>再称一次，这里会开始判读。"};
+  var prev=+D.wa[lt[0]], last=+D.wa[lt[1]], wks=Math.max(1,dayDiff(lt[0],lt[1]))/7;
+  var p=(last-prev)/prev*100/wks, gw=(last-prev)*1000/wks;
+  var s="过去"+(wks<1.4?"一周":Math.round(wks)+" 周平均每周")+" "+(gw>=0?"+":"")+Math.round(gw)+" g（"+(p>=0?"+":"")+p.toFixed(2)+"%）。";
+  if(p<=-1.5) return {c:"warn",h:s+"<b>掉太快了。</b>把下面的热量往上点两格（+10 kcal），这个速度有脂肪肝风险。"};
+  if(p<=-0.5) return {c:"good",h:s+"<b>正好在安全区间里，什么都别改。</b>"};
+  if(p<0)     return {c:"",h:s+"偏慢但在往下走。<b>再观察一周</b>，连着两周这样再往下点一格。"};
+  if(p<0.4)   return {c:"",h:s+"基本没动。<b>先查是不是偷吃了另一只的</b>；没有的话，<b>比减热量更好的一招是把某一顿改成罐头</b>（点格子下面那条）—— 热量一样，体积四倍，她会觉得更饱。"};
+  return {c:"warn",h:s+"<b>涨了。</b>八成是吃到了幼猫罐或幼猫粮，或者有人加餐。先查这两件事。"};
+}
+function verdictB(){
+  var lt=lastTwo(D.wb);
+  if(!lt) return {c:"",h:"第一次称重记下来就行。她<b>该涨</b>，正常每周 <b>50~100 g</b>。"};
+  var prev=+D.wb[lt[0]], last=+D.wb[lt[1]], wks=Math.max(1,dayDiff(lt[0],lt[1]))/7;
+  var gw=(last-prev)*1000/wks;
+  var s="过去"+(wks<1.4?"一周":Math.round(wks)+" 周平均每周")+" "+(gw>=0?"+":"")+Math.round(gw)+" g。";
+  if(gw<-5) return {c:"warn",h:s+"<b>掉秤了，立刻往上点两格</b>，别等下周。下周还掉就看医生。"};
+  if(gw<15) return {c:"warn",h:s+"<b>几乎没长，而她本来就偏瘦。</b>先确认罐头真吃进去了、大猫没抢；连着两周这样就去查粪便（球虫、贾第虫）。"};
+  if(gw>160) return {c:"",h:s+"长得偏快。不用紧张，但<b>别再加量了</b> —— 追赶生长靠营养质量，不靠热量堆。"};
+  return {c:"good",h:s+"<b>正在往回长，别动。</b>记得把新体重填到设置里，她的量会自己往上走。"};
+}
+function togo(){
+  var ks=Object.keys(D.wa).filter(function(k){return D.wa[k]!==undefined&&D.wa[k]!==null&&D.wa[k]!=="";}).sort();
+  if(!ks.length) return "";
+  var last=+D.wa[ks[ks.length-1]], gap=(last-(+D.atgt))*1000;
+  if(gap<=0) return '<br><b style="color:var(--ok)">已经到目标体重了</b> —— 把每天的量加回约 10%，改成两周称一次，别让她反弹。';
+  var lt=lastTwo(D.wa), wk=null;
+  if(lt){
+    var per=((+D.wa[lt[0]])-(+D.wa[lt[1]]))*1000/(Math.max(1,dayDiff(lt[0],lt[1]))/7);
+    if(per>3) wk=Math.ceil(gap/per);
+  }
+  return '<br>离目标还有 <b>'+Math.round(gap)+' g</b>'+
+    (wk?('，按最近的速度约还要 <b>'+wk+' 周</b>（'+(wk/4.35).toFixed(1)+' 个月）')
+       :'，速度还看不出来，再称两次');
+}
+function vA(){ var v=verdictA(); v.h+=togo(); return v; }
+
+function renderWeights(){
+  var act=document.activeElement;
+  if(act&&act.getAttribute&&act.getAttribute("data-w")){ refreshWeights(); return; }
+  document.getElementById("weights").innerHTML=
+    wrow("a",D.na,D.wa,"目标 "+(+D.atgt).toFixed(1)+" kg · 该降",vA(),D.aadj,"var(--a)")+
+    wrow("b",D.nb,D.wb,"生长期 · 该涨",verdictB(),D.badj,"var(--b)");
+}
+function refreshWeights(){
+  [["a",vA(),D.wa,"var(--a)"],["b",verdictB(),D.wb,"var(--b)"]].forEach(function(x){
+    var v=document.getElementById("v-"+x[0]);
+    if(v){ v.className="verdict "+x[1].c; v.innerHTML=x[1].h; }
+    var s=document.getElementById("sp-"+x[0]);
+    if(s) s.innerHTML=spark(x[2],x[3],x[0]);
+  });
+}
+function wrow(who,name,store,sub,v,adj,col){
+  var val=store[cur]!==undefined?store[cur]:"";
+  var p=planFor(who,cur);
+  return '<div class="wrow c'+who+'"><div class="wtop">'+
+    '<div class="wl"><div class="nm">'+esc(name)+'</div>'+
+      '<div class="wi"><input type="number" inputmode="decimal" step="0.01" placeholder="—" '+
+        'value="'+val+'" data-w="'+who+'" aria-label="'+esc(name)+'体重"><span>kg</span></div>'+
+      '<div style="font-size:10.5px;color:var(--ink-3);margin-top:3px">'+sub+'</div></div>'+
+    '<div class="spark" id="sp-'+who+'">'+spark(store,col,who)+'</div></div>'+
+    '<div class="verdict '+v.c+'" id="v-'+who+'">'+v.h+'</div>'+
+    '<div class="adj">每天热量'+
+      '<button data-adj="'+who+'" data-d="-5" aria-label="减少 5 千卡">−</button>'+
+      '<span class="v">'+(adj>0?"+":"")+adj+' kcal</span>'+
+      '<button data-adj="'+who+'" data-d="5" aria-label="增加 5 千卡">+</button>'+
+      '<span style="color:var(--ink-3);font-size:10.5px">现在 '+Math.round(p.kc)+' kcal/天</span></div></div>';
+}
+function spark(store,col,who){
+  var ks=Object.keys(store).filter(function(k){return store[k]!==undefined&&store[k]!==null&&store[k]!=="";}).sort();
+  var W=250,H=56,PL=3,PR=34,PT=9,PB=13;
+  if(ks.length<2) return '<div style="height:56px;display:flex;align-items:center;font-size:11px;color:var(--ink-3);line-height:1.5">'+
+      (ks.length?"再称一次就出曲线":"每周称一次<br>曲线画在这里")+'</div>';
+  var vals=ks.map(function(k){return +store[k];});
+  var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
+  var tgt=(who==="a")?+D.atgt:null;
+  if(tgt!==null&&tgt<mn) mn=tgt;
+  if(mx-mn<0.12){var c=(mx+mn)/2; mn=c-.06; mx=c+.06;}
+  var pad=(mx-mn)*.2; mn-=pad; mx+=pad;
+  var t0=s2d(ks[0]).getTime(), t1=s2d(ks[ks.length-1]).getTime(); if(t1===t0)t1=t0+1;
+  function X(k){return PL+(s2d(k).getTime()-t0)/(t1-t0)*(W-PL-PR);}
+  function Y(v){return PT+(mx-v)/(mx-mn)*(H-PT-PB);}
+  var d="";
+  for(var i=0;i<ks.length;i++) d+=(i?"L":"M")+X(ks[i]).toFixed(1)+" "+Y(vals[i]).toFixed(1)+" ";
+  var lk=ks[ks.length-1], lv=vals[vals.length-1];
+  var ty=(tgt!==null&&tgt>=mn&&tgt<=mx)?Y(tgt):null;
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="体重变化">'+
+    (ty!==null?'<line x1="'+PL+'" y1="'+ty.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+ty.toFixed(1)+
+      '" stroke="'+col+'" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>'+
+      '<text x="'+(W-PR+4)+'" y="'+(ty+3.5).toFixed(1)+'" fill="'+col+'" font-size="9" opacity=".75" '+
+      'font-family="IBM Plex Mono, monospace">'+(+D.atgt).toFixed(1)+'</text>':'')+
+    '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+X(ks[0]).toFixed(1)+'" cy="'+Y(vals[0]).toFixed(1)+'" r="2.2" fill="'+col+'"/>'+
+    '<circle cx="'+X(lk).toFixed(1)+'" cy="'+Y(lv).toFixed(1)+'" r="3.6" fill="'+col+'"/>'+
+    '<text x="'+Math.min(W-2,X(lk)+7).toFixed(1)+'" y="'+(Y(lv)+3.5).toFixed(1)+'" fill="var(--ink)" font-size="11" '+
+      'font-family="IBM Plex Mono, monospace" text-anchor="'+(X(lk)>W-PR-10?"end":"start")+'">'+lv.toFixed(2)+'</text>'+
+    '<text x="'+PL+'" y="'+(H-2)+'" fill="var(--ink-3)" font-size="8.5" font-family="IBM Plex Mono, monospace">'+
+      ks[0].slice(5).replace("-","/")+'</text>'+
+    '<text x="'+(W-PR)+'" y="'+(H-2)+'" fill="var(--ink-3)" font-size="8.5" text-anchor="end" '+
+      'font-family="IBM Plex Mono, monospace">'+lk.slice(5).replace("-","/")+'</text></svg>';
+}
+
+/* ── 驱虫 ── */
+function renderDeworm(){
+  var ev=Math.max(1,+D.dwevery||3);
+  set("dwm","每 "+ev+" 个月一次");
+  var am=ageMonths(today);
+  function blk(who,name,kitten){
+    var last=D.dwlast||"", nxt=last?addM(last,ev):"", days=nxt?dayDiff(today,nxt):null;
+    var due,sub;
+    if(!last){ due="尽快做一次"; sub="填上次日期，这里会自动算下一次"; }
+    else if(days<=0){ due=nxt.slice(5).replace("-","/"); sub="已经到期 "+(-days)+" 天"; }
+    else { due=nxt.slice(5).replace("-","/"); sub="还有 "+days+" 天"; }
+    var note=kitten
+      ? (am<6.5?"幼猫节奏收尾：本月做完这次，之后转成猫节奏":"已过 6 月龄，转成猫节奏")
+      : "全室内 · 不吃生肉 · 没跳蚤 → 这个频率够";
+    return '<div class="dwc c'+who+'"><div class="who">'+esc(name)+'</div>'+
+      '<div class="due'+((days!==null&&days<=7)?" soon":"")+'">'+due+'</div>'+
+      '<div class="sub">'+sub+'</div><div class="sub" style="margin-top:5px">'+note+'</div></div>';
+  }
+  setH("dworm", blk("a",D.na,false)+blk("b",D.nb,true));
+  var dwi=document.getElementById("dw-last");
+  if(dwi&&dwi!==document.activeElement) dwi.value=D.dwlast||"";
+}
+
+/* ── 表 ── */
+function renderTable(){
+  var wnow=weekOf(today);
+  var h='<thead><tr><th>周</th><th>'+esc(D.na)+'<br><span class="sub">早 / 晚 / 夜</span></th>'+
+        '<th>'+esc(D.nb)+'<br><span class="sub">早 / 晚 / 夜</span></th><th>窗口</th></tr></thead><tbody>';
+  function cellTxt(p){ return p.meals.map(function(m){return m.g;}).join(" / "); }
+  for(var w=1;w<=5;w++){
+    var date=addD(D.start,(w-1)*7), pa=planFor("a",date,[0,0,0]), pb=planFor("b",date,[0,0,0]);
+    h+='<tr class="'+(w===wnow?"now":"")+'">'+
+      '<td>'+(w<5?"第 "+w+" 周":"第 5 周起")+'<br><span class="sub">'+PHASES[w-1].n+'</span></td>'+
+      '<td class="g ga">'+cellTxt(pa)+'<br><span class="sub">'+Math.round(pa.kc)+' kcal</span></td>'+
+      '<td class="g gb">'+cellTxt(pb)+'<br><span class="sub">'+Math.round(pb.kc)+' kcal</span></td>'+
+      '<td class="g">'+PHASES[w-1].win+"'"+'</td></tr>';
+  }
+  document.getElementById("ladtable").innerHTML=h+'</tbody>';
+}
+
+/* ── 罐头换算 ── */
+function renderSwap(){
+  var eqs={};
+  function blk(who,name,cang,cwk){
+    var p=planFor(who,cur,[0,0,0]);                 /* 全干粮基准 */
+    var wd=dens(who,true), dd=dens(who,false);
+    var eq=cang*wd/dd;                              /* 一罐 ＝ 多少克干粮 */
+    eqs[who]=Math.round(eq);
+    var pctDay=p.dry>0?Math.round(eq/p.dry*100):0;
+    /* 整顿换：哪顿她装得下、又最接近一罐 */
+    var rs=(who==="a")?MEALS:KIT, cap=((who==="a")?(+D.akg):(+D.bkg))*1000*0.035, best=null;
+    for(var i=0;i<3;i++){
+      var g=Math.round(p.kc*rs[i].r/wd);
+      if(g>cap) continue;
+      var d=Math.abs(g-cang);
+      if(!best||d<best.d) best={i:i,g:g,d:d};
+    }
+    var line=best
+      ? '整顿换选 <b>'+rs[best.i].k+'</b> —— '+best.g+' g 罐头（约 '+(best.g/cang).toFixed(1)+' 罐），别的顿体积超'
+      : '她一顿装不下一整罐的体积，只能当加餐、从当天干粮里扣';
+    return '<div class="dwc c'+who+'"><div class="who">'+esc(name)+'</div>'+
+      '<div class="due">1 罐 = '+Math.round(eq)+' g 干粮</div>'+
+      '<div class="sub">一罐 '+cang+' g ＝ 她一天的 <b>'+pctDay+'%</b>（全天 '+p.dry+' g 干粮）</div>'+
+      '<div class="sub" style="margin-top:5px">'+line+'</div></div>';
+  }
+  setH("swap", blk("a",D.na,+D.acang||85,+D.acanwk||0)+blk("b",D.nb,+D.bcang||85,+D.bcanwk||0));
+  set("swaph2", eqs.a===eqs.b ? ("1 罐 ≈ "+eqs.a+" g 干粮")
+                              : ("1 罐 ≈ "+Math.min(eqs.a,eqs.b)+"~"+Math.max(eqs.a,eqs.b)+" g 干粮"));
+  var rows=[[.25,"¼ 罐"],[.5,"半罐"],[1,"1 罐"],[2,"2 罐"]];
+  var h='<thead><tr><th>开多少</th><th>'+esc(D.na)+' 少喂</th><th>'+esc(D.nb)+' 少喂</th></tr></thead><tbody>';
+  for(var i=0;i<rows.length;i++){
+    var f=rows[i][0];
+    var ga=Math.round(f*(+D.acang||85)), gb=Math.round(f*(+D.bcang||85));
+    h+='<tr><td>'+rows[i][1]+'</td>'+
+       '<td class="g ga">'+Math.round(ga*dens("a",true)/dens("a",false))+' g 干粮<br>'+
+         '<span class="sub">给 '+ga+' g 罐头</span></td>'+
+       '<td class="g gb">'+Math.round(gb*dens("b",true)/dens("b",false))+' g 干粮<br>'+
+         '<span class="sub">给 '+gb+' g 罐头</span></td></tr>';
+  }
+  document.getElementById("swaptable").innerHTML=h+'</tbody>';
+  var pa=planFor("a",cur,[0,0,0]);
+  setH("swapnote",
+    '<b class="rd">最容易翻车的一句：罐头不是「没热量」。</b>'+esc(D.na)+
+    ' 一整天才 <b>'+pa.dry+' g</b> 干粮，<b>一罐就顶掉她三分之一天</b>。'+
+    '当零食额外加两罐，那天基本白减。<br><br>'+
+    '<b>怎么用：</b>想给的那一顿，点上面格子下面那条，克数会自己换成罐头的量 —— '+
+    '当天剩下两顿照常给干粮，一天总热量不变。<b>不用算得很准，差三五克无所谓，别差一整罐。</b>');
+}
+
+/* ── 采购 ── */
+function renderBuy(){
+  var pa=planFor("a",addD(D.start,28),[0,0,0]), pb=planFor("b",today,[0,0,0]);
+  function blk(who,name,p,bagG,cang,cany,cwk){
+    var days=p.dry>0?Math.round(bagG/p.dry):null;
+    var cansM=Math.round(cwk*30.4/7);
+    var eq=cang*dens(who,true)/dens(who,false);
+    return '<div class="dwc c'+who+'"><div class="who">'+esc(name)+'</div>'+
+      '<div class="due">'+p.dry+' g<span style="font-size:12px;font-weight:500"> 干粮/天</span></div>'+
+      '<div class="sub">'+(days?'那袋撑 '+days+' 天（'+(days/30.4).toFixed(1)+' 个月）':'')+'</div>'+
+      '<div class="sub" style="margin-top:5px">罐头一周 '+cwk+' 罐 → 每月 <b>'+cansM+'</b> 罐 · 约 '+
+        Math.round(cansM*cany)+' 元</div>'+
+      (p.dry>0?'<div class="sub">半月一份 = <b>'+(p.dry*15/1000).toFixed(2)+' kg</b> × '+
+        Math.ceil(bagG/(p.dry*15))+' 份</div>':'')+
+      '<div class="sub" style="margin-top:5px;color:var(--ink-3)">每开一罐，干粮多撑 '+
+        (p.dry>0?(eq/p.dry).toFixed(1):"—")+' 天</div>'+
+    '</div>';
+  }
+  setH("buy", blk("a",D.na,pa,10000,+D.acang||85,+D.acany||10,+D.acanwk||0)+
+              blk("b",D.nb,pb,7000,+D.bcang||85,+D.bcany||12,+D.bcanwk||0));
+  var cm=Math.round(((+D.acanwk||0)+(+D.bcanwk||0))*30.4/7);
+  var cy=Math.round(((+D.acanwk||0)*(+D.acany||0)+(+D.bcanwk||0)*(+D.bcany||0))*30.4/7);
+  var bags=(pa.dry>0?Math.ceil(10000/(pa.dry*15)):0)+(pb.dry>0?Math.ceil(7000/(pb.dry*15)):0);
+  var maxHalf=Math.max(pa.dry,pb.dry)*15/1000;
+  setH("buynote",
+    '<b>按现在设的频率，罐头每月 '+cm+' 罐、约 '+cy+' 元。</b>'+
+    '改「一周大概开几罐」在设置里，这两个数跟着变。<b>要多给就多给 '+esc(D.nb)+' 的</b> —— '+
+    '她在补身子，罐头对她是营养；对 '+esc(D.na)+' 只是饱腹感。<br><br>'+
+    '<b>密封袋买 '+bags+' 个</b>，最大一份 '+maxHalf.toFixed(2)+' kg。猫粮约 1 kg 占 2.5~3 升，'+
+    '所以买<b>标称 1~1.5 kg（约 22×32 cm）</b>的正好，还留得出折口密封的余量。'+
+    '<b>要铝箔不透光的，别买透明塑料自封袋</b> —— 要防的是脂肪氧化，透明袋阻氧差，光还会加速它。');
+}
+
+/* ── 记录 ── */
+var ST=["未喂","光盘","有剩","一口没碰"];
+function dayGrams(d){
+  var m=D.marks[d]||{};
+  if(m.g&&m.g.length===6) return {g:m.g,w:m.w||[0,0,0,0,0,0]};   /* 当天留的底，优先 */
+  var pa=planFor("a",d), pb=planFor("b",d);
+  return {g:[pa.meals[0].g,pa.meals[1].g,pa.meals[2].g,pb.meals[0].g,pb.meals[1].g,pb.meals[2].g],
+          w:[pa.meals[0].wet?1:0,pa.meals[1].wet?1:0,pa.meals[2].wet?1:0,
+             pb.meals[0].wet?1:0,pb.meals[1].wet?1:0,pb.meals[2].wet?1:0]};
+}
+function allDays(){
+  var o={};
+  SECT.forEach(function(sec){ for(var d in D[sec]) o[d]=1; });
+  return Object.keys(o).sort();
+}
+function renderLog(){
+  var ks=allDays();
+  if(!ks.length){
+    set("logm","还没有记录");
+    setH("logstat",'<div class="dwc" style="grid-column:1/-1"><div class="sub">'+
+      '点上面格子记下第一顿，这里就开始攒。<b>每一天都留着，不会被后面的改动覆盖。</b></div></div>');
+    document.getElementById("logtable").innerHTML="";
+    return;
+  }
+  var span=dayDiff(ks[0],ks[ks.length-1])+1;
+  set("logm","从 "+ks[0].replace(/-/g,"/")+" 起");
+  /* 按月汇总 */
+  var mo={};
+  ks.forEach(function(d){
+    var k=d.slice(0,7), r=mo[k]||(mo[k]={days:0,fed:0,clean:0,cans:0});
+    var m=D.marks[d]||{}, any=false, dg=dayGrams(d);
+    for(var i=0;i<6;i++){
+      var st=m[(i<3?"a":"b")+(i%3)]||0;
+      if(st){ any=true; r.fed++; if(st===1) r.clean++; if(dg.w[i]) r.cans++; }
+    }
+    if(any||D.wa[d]!==undefined||D.wb[d]!==undefined) r.days++;
+  });
+  var mks=Object.keys(mo).sort().reverse(), tot={days:0,fed:0,clean:0,cans:0};
+  mks.forEach(function(k){["days","fed","clean","cans"].forEach(function(f){tot[f]+=mo[k][f];});});
+  var rate=tot.fed?Math.round(tot.clean/tot.fed*100):0;
+  setH("logstat",
+    '<div class="dwc ca"><div class="who">记了多久</div><div class="due">'+tot.days+' 天</div>'+
+      '<div class="sub">跨度 '+span+' 天 · '+mks.length+' 个月 · 第 '+weekNo(today)+' 周</div></div>'+
+    '<div class="dwc cb"><div class="who">光盘率</div><div class="due">'+rate+'%</div>'+
+      '<div class="sub">'+tot.fed+' 顿里 '+tot.clean+' 顿吃光 · 开过 '+tot.cans+' 顿罐头</div></div>');
+  var h='<thead><tr><th>月份</th><th>记了</th><th>光盘</th><th>罐头</th></tr></thead><tbody>';
+  mks.slice(0,18).forEach(function(k){
+    var r=mo[k];
+    h+='<tr><td>'+k.replace("-","年 ")+' 月</td>'+
+       '<td class="g">'+r.days+' 天</td>'+
+       '<td class="g">'+(r.fed?Math.round(r.clean/r.fed*100)+"%":"—")+
+         '<br><span class="sub">'+r.fed+' 顿</span></td>'+
+       '<td class="g">'+r.cans+' 顿</td></tr>';
+  });
+  document.getElementById("logtable").innerHTML=h+'</tbody>';
+}
+var nTag="其他", nWho="";
+function noteCount(){ var n=0; for(var d in D.notes) n+=D.notes[d].length; return n; }
+function renderNotes(){
+  var n=noteCount();
+  set("notem", n?(n+" 条"):"还没记过");
+  setH("nhint", cur===today
+    ? '记在 <b>今天</b>。疫苗、看病、用药、换粮、吐了软便 —— 想起来就记一条，导出时跟喂食并在一起。'
+    : '记在 <b>'+cur.replace(/-/g,"/")+'</b>（你正在看的那天）。补记以前的事就这么补。');
+  var ks=[], d;
+  for(d in D.notes) ks.push(d);
+  ks.sort().reverse();
+  var h="", shown=0;
+  for(var i=0;i<ks.length&&shown<40;i++){
+    var arr=D.notes[ks[i]];
+    for(var j=arr.length-1;j>=0&&shown<40;j--,shown++){
+      var nt=arr[j], who=nt.c==="a"?D.na:(nt.c==="b"?D.nb:"");
+      h+='<div class="nitem"><div class="nd">'+ks[i].slice(5).replace("-","/")+'</div>'+
+        '<div class="nb"><span class="nt'+(nt.c?" c"+nt.c:"")+'">'+esc(nt.t)+
+          (who?(" · "+esc(who)):"")+'</span>'+(nt.x?esc(nt.x):"")+'</div>'+
+        '<button class="nx" type="button" data-ndel="'+ks[i]+"|"+j+'" aria-label="删掉这条">×</button></div>';
+    }
+  }
+  document.getElementById("nlist").innerHTML=h||
+    '<div class="nitem"><div class="nb" style="color:var(--ink-3)">'+
+    '第一次打疫苗、第一次看医生、哪天换的粮 —— 记下来，十年后这就是她们的病历。</div></div>';
+}
+
+function buildCSV(){
+  var ks=allDays(), q=function(v){v=String(v);
+    return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  var head=["日期","星期","第几周",
+    D.na+"_早",D.na+"_晚",D.na+"_夜",D.na+"_体重kg",
+    D.nb+"_早",D.nb+"_晚",D.nb+"_夜",D.nb+"_体重kg","记事"];
+  var rows=[head.map(q).join(",")];
+  ks.forEach(function(d){
+    var m=D.marks[d]||{}, dg=dayGrams(d), c=[d,WD[s2d(d).getDay()],weekNo(d)];
+    for(var i=0;i<3;i++){ var st=m["a"+i]||0;
+      c.push(st?(dg.g[i]+(dg.w[i]?"g罐头 ":"g干粮 ")+ST[st]):""); }
+    c.push(D.wa[d]!==undefined?D.wa[d]:"");
+    for(var i=0;i<3;i++){ var st2=m["b"+i]||0;
+      c.push(st2?(dg.g[3+i]+(dg.w[3+i]?"g罐头 ":"g干粮 ")+ST[st2]):""); }
+    c.push(D.wb[d]!==undefined?D.wb[d]:"");
+    c.push((D.notes[d]||[]).map(function(nt){
+      return nt.t+(nt.c?("["+(nt.c==="a"?D.na:D.nb)+"]"):"")+(nt.x?("："+nt.x):"");
+    }).join(" ｜ "));
+    rows.push(c.map(q).join(","));
+  });
+  return "\uFEFF"+rows.join("\r\n");     /* BOM —— 不加的话 Excel 打开中文是乱码 */
+}
+
+function renderNames(){
+  var map={"r2-name":D.nb,"r2-name2":D.na,"tbl-a":D.na,"tbl-b":D.nb,
+    "rl-a":D.na,"rl-a2":D.na,"rl-b":D.nb,"ex-a":D.na,"ex-a2":D.na,"ex-b":D.nb,
+    "nw-a":D.na,"nw-b":D.nb,   /* 记事那排选猫的钮 —— 记病历时"猫 1"没人认得出是谁 */
+    "pick-a":D.na+" · 成猫全价主食罐","pick-b":D.nb+" · 幼猫全价主食罐"};
+  for(var id in map) set(id,map[id]);
+  setH("ex-cap","一顿最多约 —— <b>"+esc(D.na)+" "+Math.round(D.akg*1000*0.05)+" g</b>，<b>"+
+    esc(D.nb)+" "+Math.round(D.bkg*1000*0.05)+" g</b>。");
+}
+
+function renderStats(){
+  var pa=planFor("a",addD(D.start,28),[0,0,0]), pb=planFor("b",today,[0,0,0]);
+  set("rl-fast",Math.round(D.akg*1000*0.015));
+  set("st-floor",Math.round(floorK()));
+  var ad=s2d(D.bbirth); ad.setFullYear(ad.getFullYear()+1);
+  set("st-adult",ad.getFullYear()+" 年 "+(ad.getMonth()+1)+" 月");
+  set("ef-from",(+D.akg).toFixed(1)); set("ef-to",(+D.atgt).toFixed(1));
+  var perWk=rer(D.akg)-rer(D.atgt);
+  set("ef-wk", perWk>1?Math.round((D.akg-D.atgt)*1000/perWk):"—");
+  setH("stor-line",
+    '<b>'+esc(D.na)+'</b>：干粮 <b class="n">'+pa.dry+'</b> g/天 → 10 kg 那袋能吃 <b class="n">'+
+      (pa.dry?Math.round(10000/pa.dry):"—")+'</b> 天（约 '+(pa.dry?(10000/pa.dry/30.4).toFixed(1):"—")+' 个月）<br>'+
+    '<b>'+esc(D.nb)+'</b>：干粮 <b class="n">'+pb.dry+'</b> g/天 → 7 kg 那袋能吃 <b class="n">'+
+      (pb.dry?Math.round(7000/pb.dry):"—")+'</b> 天（约 '+(pb.dry?(7000/pb.dry/30.4).toFixed(1):"—")+' 个月）');
+  var ba=pa.dry?Math.ceil(10000/(pa.dry*15)):0, bb=pb.dry?Math.ceil(7000/(pb.dry*15)):0;
+  setH("stor-bag",
+    '<b>'+esc(D.na)+'</b> 半月一份 = <b class="n">'+(pa.dry*15/1000).toFixed(2)+' kg</b>，10 kg 分 <b class="n">'+ba+'</b> 份；<br>'+
+    '<b>'+esc(D.nb)+'</b> 半月一份 = <b class="n">'+(pb.dry*15/1000).toFixed(2)+' kg</b>，7 kg 分 <b class="n">'+bb+'</b> 份。<br>'+
+    '一共 <b class="n">'+(ba+bb)+'</b> 个袋子，两只用<b>同一个尺寸</b>就行。');
+}
+
+/* ── 设置 ── */
+var SET=[
+ ["#","两只猫"],
+ ["na","猫 1 名字","text",null,"成猫 · 减肥"],
+ ["nb","猫 2 名字","text",null,"幼猫 · 偏瘦，要长"],
+ ["akg","猫 1 现在体重 kg","number","0.01","10 斤 = 5.0 kg"],
+ ["atgt","猫 1 目标体重 kg","number","0.1","按超重约 15% 估的"],
+ ["bkg","猫 2 现在体重 kg","number","0.01","这个数是我猜的，务必称一次"],
+ ["bbirth","猫 2 出生日","date",null,"按半岁倒推，知道准的就改"],
+ ["!bboost","偏瘦加成","toggle",null,"猫 2 每天热量 ×1.1。追回来之后关掉 —— 长太快会养出第二只胖猫"],
+ ["#","粮的热量密度"],
+ ["adens","减肥粮 kcal/kg","number","10","袋子背面「代谢能」"],
+ ["bdens","幼猫粮 kcal/kg","number","10","同上"],
+ ["awdens","成猫罐 kcal/100g","number","5","罐子背面"],
+ ["bwdens","幼猫罐 kcal/100g","number","5","这四个都是默认值，不是实测"],
+ ["#","罐头规格和价格"],
+ ["acang","成猫罐 一罐 g","number","5",""],
+ ["bcang","幼猫罐 一罐 g","number","5",""],
+ ["acany","成猫罐 一罐 元","number","0.5",""],
+ ["bcany","幼猫罐 一罐 元","number","0.5",""],
+ ["acanwk","猫 1 一周开几罐","number","1","她只需要饱腹感，少给没关系"],
+ ["bcanwk","猫 2 一周开几罐","number","1","她在补身子，多给是有好处的"],
+ ["#","驱虫和时间"],
+ ["dwevery","驱虫间隔 月","number","1","全室内不出门 → 3~6；出门/吃生肉/有跳蚤 → 1"],
+ ["start","计划开始日","date",null,"从哪天算第 1 周"],
+ ["t0","早餐","time",null,""],
+ ["t1","晚餐","time",null,""],
+ ["t2","夜宵","time",null,""]
+];
+function renderSettings(){
+  var h="";
+  for(var i=0;i<SET.length;i++){
+    var s=SET[i];
+    if(s[0]==="#"){ h+='<div class="grp">'+s[1]+'</div>'; continue; }
+    if(s[2]==="toggle"){
+      var key=s[0].slice(1);
+      h+='<button class="tog'+(D[key]?" on":"")+'" data-tog="'+key+'">'+
+         '<span class="sw"></span><span class="tx"><b>'+s[1]+'</b><span>'+s[4]+'</span></span></button>';
+      continue;
+    }
+    h+='<div><label for="s-'+s[0]+'">'+s[1]+'</label>'+
+       '<input id="s-'+s[0]+'" type="'+s[2]+'"'+(s[3]?' step="'+s[3]+'"':'')+
+       ' value="'+esc(D[s[0]])+'" data-s="'+s[0]+'">'+
+       (s[4]?'<div class="hint">'+s[4]+'</div>':'')+'</div>';
+  }
+  document.getElementById("setgrid").innerHTML=h;
+}
+function syncSettingsInputs(){
+  for(var i=0;i<SET.length;i++){
+    if(SET[i][0]==="#"||SET[i][2]==="toggle") continue;
+    var el=document.getElementById("s-"+SET[i][0]);
+    if(el&&el!==document.activeElement) el.value=D[SET[i][0]];
+  }
+  var t=document.querySelector("[data-tog=bboost]");
+  if(t) t.className="tog"+(D.bboost?" on":"");
+}
+
+/* ══════════ 事件 ══════════ */
+document.addEventListener("click",function(e){
+  var t=e.target;
+  var f=t.closest?t.closest("[data-f]"):null;      /* 换粮 —— 放在最前，别被 cmain 吃掉 */
+  if(f){
+    var mm=mk(cur), kf="f"+f.getAttribute("data-f")+f.getAttribute("data-j");
+    mm[kf]=mm[kf]?0:1; stamp(); save(); render(); return;    /* 只改当天这一顿 */
+  }
+  var c=t.closest?t.closest(".cmain"):null;
+  if(c){ var m=mk(cur), k=c.getAttribute("data-c")+c.getAttribute("data-j");
+    m[k]=((m[k]||0)+1)%4; stamp(); save(); render(); return; }
+  var a=t.closest?t.closest("[data-adj]"):null;
+  if(a){
+    var who=a.getAttribute("data-adj"), d=+a.getAttribute("data-d");
+    if(who==="a"){ var before=kcalA(today); D.aadj+=d;
+      if(d<0&&Math.abs(kcalA(today)-before)<0.01) D.aadj-=d;   /* 已经在下限上 */
+    } else D.badj+=d;
+    save(); render(); return;
+  }
+  var tg=t.closest?t.closest("[data-tag]"):null;
+  if(tg){ nTag=tg.getAttribute("data-tag");
+    Array.prototype.forEach.call(document.getElementById("ntags").children,function(el){
+      el.className="chip"+(el.getAttribute("data-tag")===nTag?" on":""); });
+    return; }
+  var wh=t.closest?t.closest("[data-who]"):null;
+  if(wh){ nWho=wh.getAttribute("data-who");
+    Array.prototype.forEach.call(document.getElementById("nwho").children,function(el){
+      el.className="chip"+(el.getAttribute("data-who")===nWho?" on":""); });
+    return; }
+  var nd=t.closest?t.closest("[data-ndel]"):null;
+  if(nd){ var pr=nd.getAttribute("data-ndel").split("|");
+    if(D.notes[pr[0]]){ D.notes[pr[0]].splice(+pr[1],1);
+      if(!D.notes[pr[0]].length) delete D.notes[pr[0]]; }
+    save(); render(); return; }
+  var g=t.closest?t.closest("[data-tog]"):null;
+  if(g){ var kk=g.getAttribute("data-tog"); D[kk]=D[kk]?0:1; save(); render(); syncSettingsInputs(); return; }
+});
+document.addEventListener("input",function(e){
+  var t=e.target, who=t.getAttribute&&t.getAttribute("data-w");
+  if(who){
+    var store=(who==="a")?D.wa:D.wb, v=parseFloat(t.value);
+    if(isNaN(v)) delete store[cur]; else store[cur]=v;
+    save(); refreshWeights(); renderStats(); renderSwap(); renderBuy(); renderNames(); return;
+  }
+  var s=t.getAttribute&&t.getAttribute("data-s");
+  if(s){
+    var val=t.value;
+    if(t.type==="number"){ var f2=parseFloat(val); if(isNaN(f2))return; val=f2; }
+    else if(!val&&s!=="dwlast") return;
+    D[s]=val; norm(); save(); render();   /* render 不重建设置格，光标留得住 */
+  }
+});
+function addNote(){
+  var el=document.getElementById("ntext"), x=(el.value||"").trim();
+  if(!x&&nTag==="其他"){ el.focus(); return; }          /* 光点「其他」不写字，记了也没意义 */
+  (D.notes[cur]=D.notes[cur]||[]).push({t:nTag,c:nWho,x:x,at:Date.now()});
+  if(nTag==="驱虫") D.dwlast=cur;                        /* 顺手把驱虫日期更新掉 */
+  el.value=""; save(); render();
+  var di=document.getElementById("dw-last"); if(di) di.value=D.dwlast||"";
+}
+document.getElementById("nadd").addEventListener("click",addNote);
+document.getElementById("ntext").addEventListener("keydown",function(e){
+  if(e.key==="Enter") addNote();
+});
+document.getElementById("prev").addEventListener("click",function(){cur=addD(cur,-1);render();});
+document.getElementById("nextd").addEventListener("click",function(){cur=addD(cur,1);render();});
+
+renderSettings();
+render();
+setInterval(renderNext,60000);
+
+/* ══════════ 导出 / 备份 / 恢复 ══════════ */
+/* 装在 claude.ai 里：走平台的保存对话框。自己托管（GitHub Pages 那种）：直接下载。
+   两条路分开判，是因为沙箱里 a.click() 被挡掉时【不报错】—— 会让人以为存下来了。 */
+var HOSTED=(typeof claude==="undefined"||!claude||typeof claude.use!=="function");
+async function offer(fn,text,mime){
+  if(HOSTED){
+    try{
+      var u=URL.createObjectURL(new Blob([text],{type:mime}));
+      var el=document.createElement("a");
+      el.href=u; el.download=fn; document.body.appendChild(el); el.click();
+      document.body.removeChild(el);
+      setTimeout(function(){URL.revokeObjectURL(u);},2000);
+      setH("dlnote",'<b style="color:var(--ok)">已经下载：'+fn+'</b>');
+      return;
+    }catch(e){}
+  }else{
+    var dl=null;
+    try{ dl=await claude.use("downloads"); }catch(e){}
+    if(dl){
+      try{ await dl.save({filename:fn,data:text});
+        setH("dlnote",'<b style="color:var(--ok)">存好了：'+fn+'</b>'); return;
+      }catch(e2){
+        if(e2&&e2.code==="declined"){ setH("dlnote","取消了，没存。"); return; }
+      }
+    }
+  }
+  var ta=document.getElementById("dlta");
+  ta.value=text; ta.hidden=false; ta.focus(); ta.select();
+  setH("dlnote","<b>这台设备存不了文件</b>，内容放在下面框里了 —— 全选复制，粘进文本或表格软件另存。");
+}
+document.getElementById("dl").addEventListener("click",function(){
+  if(!allDays().length){ setH("dlnote","还没有记录可以导。点上面格子记下第一顿。"); return; }
+  offer("猫咪喂食记录_"+today+".csv", buildCSV(), "text/csv");
+});
+document.getElementById("bk").addEventListener("click",function(){
+  offer("猫咪记录备份_"+today+".json", JSON.stringify(D), "application/json");
+});
+var impArmed=false, impTimer=0;
+document.getElementById("imp").addEventListener("click",function(){
+  var b=document.getElementById("imp");
+  if(!impArmed){                                   /* 恢复会盖掉设置，点两次才算数 */
+    impArmed=true; b.textContent="确定？再点一次选文件";
+    clearTimeout(impTimer);
+    impTimer=setTimeout(function(){impArmed=false;b.textContent="从备份恢复";},6000);
+    return;
+  }
+  impArmed=false; b.textContent="从备份恢复"; clearTimeout(impTimer);
+  document.getElementById("impf").click();
+});
+document.getElementById("impf").addEventListener("change",function(e){
+  var f=e.target&&e.target.files&&e.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var src=JSON.parse(r.result), got=0;
+      SECT.forEach(function(sec){
+        if(src[sec]&&typeof src[sec]==="object")
+          for(var d in src[sec]){ D[sec][d]=src[sec][d]; got++; }
+      });
+      SETK.forEach(function(k){ if(src[k]!==undefined) D[k]=src[k]; });
+      norm(); save(); syncSettingsInputs(); render();
+      setH("dlnote",'<b style="color:var(--ok)">恢复好了，读进来 '+got+' 天。</b>'+
+        ' 记录是<b>合并</b>进来的 —— 原来有的一条没删。');
+    }catch(err){
+      setH("dlnote",'<b style="color:var(--alert)">这个文件读不出来。</b>'+
+        ' 要的是本页「导出备份（JSON）」存下来的那个文件。');
+    }
+  };
+  r.readAsText(f);
+  e.target.value="";
+});
+
+
+/* ══════════ 云同步：存进你自己的 GitHub 私有仓库 ══════════
+   为什么是 GitHub 不是随便找个数据库：他已经有账号不用再注册；仓库是私有的、在他自己名下；
+   而且每同步一次就是一次 commit —— 一辈子的账自带完整历史，点错了能翻回去。
+   令牌只进 localStorage 的 GKEY，【绝不进 D】—— 所以导出的 JSON 备份里永远没有它。
+   只在自己托管时开（HOSTED）：claude.ai 里的那份被平台挡住外部请求，开了也是死的。 */
+var GKEY="catfeed.gh";
+var GH={repo:"",tok:"",on:0,pulled:[]};
+try{var graw=localStorage.getItem(GKEY);
+  if(graw){var gp=JSON.parse(graw);
+    if(typeof gp.repo==="string") GH.repo=gp.repo;
+    if(typeof gp.tok==="string") GH.tok=gp.tok;
+    GH.on=gp.on?1:0;
+    if(Array.isArray(gp.pulled)) GH.pulled=gp.pulled;}}catch(e){}
+if(!GH.tok||!GH.repo) GH.on=0;                       /* 存储被清过 → 当成没连 */
+function ghSave(){ try{localStorage.setItem(GKEY,JSON.stringify(GH));}catch(e){} }
+
+/* 中文要先转 UTF-8 再 base64，btoa 直接吞会炸 */
+function b64e(s){var b=new TextEncoder().encode(s),x="",i;
+  for(i=0;i<b.length;i+=0x8000) x+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));
+  return btoa(x);}
+function b64d(s){var bin=atob(String(s).replace(/\s/g,"")),a=new Uint8Array(bin.length),i;
+  for(i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i);
+  return new TextDecoder().decode(a);}
+
+var ghShas={}, ghRaw={}, ghBusy=0, ghAgain=0, ghTimer=0, ghLastOK=0;
+function ghHead(body){
+  var h={"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",
+         "Authorization":"Bearer "+GH.tok};
+  if(body) h["Content-Type"]="application/json";
+  return h;
+}
+function ghMsg(st){
+  if(st===401) return "令牌不对，或者已经过期了";
+  if(st===403) return "这把令牌没有写权限（Contents 要选 Read and write），或者被 GitHub 限流了";
+  if(st===404) return "找不到这个仓库 —— 名字写错了，或者建令牌时没把它勾上";
+  if(st>=500) return "GitHub 那边出错了，过会儿再点一次";
+  return "出错了（HTTP "+st+"）";
+}
+function ghURL(p){ return "https://api.github.com/repos/"+GH.repo+"/contents/"+p; }
+
+async function ghGet(p){
+  var r;
+  try{ r=await fetch(ghURL(p)+"?_="+Date.now(),{headers:ghHead(0),cache:"no-store"}); }
+  catch(e){ throw {net:1,msg:"连不上 GitHub（网络不通）"}; }
+  if(r.status===404){ delete ghShas[p]; delete ghRaw[p]; return null; }
+  if(!r.ok) throw {st:r.status,msg:ghMsg(r.status)};
+  var j=await r.json(), o;
+  try{ o=JSON.parse(b64d(j.content)); }
+  catch(e){ throw {msg:"云端的 "+p+" 读不出来，文件可能被手动改过"}; }
+  ghShas[p]=j.sha; ghRaw[p]=JSON.stringify(o);
+  return o;
+}
+async function ghPut(p,obj,msg){
+  var body={message:msg,content:b64e(JSON.stringify(obj))};
+  if(ghShas[p]) body.sha=ghShas[p];
+  var r;
+  try{ r=await fetch(ghURL(p),{method:"PUT",headers:ghHead(1),body:JSON.stringify(body)}); }
+  catch(e){ throw {net:1,msg:"连不上 GitHub（网络不通）"}; }
+  if(r.status===409||r.status===422) throw {conflict:1,msg:"版本对不上"};
+  if(!r.ok) throw {st:r.status,msg:ghMsg(r.status)};
+  var j=await r.json();
+  if(j&&j.content&&j.content.sha) ghShas[p]=j.content.sha;
+  return 1;
+}
+
+/* 记事只加不减 —— 两台设备各记一条都得留住，所以按时间戳去重后合并 */
+function ghMergeNotes(a,b){
+  a=Array.isArray(a)?a:[]; b=Array.isArray(b)?b:[];
+  var seen={}, out=[];
+  a.concat(b).forEach(function(n){
+    if(!n||typeof n!=="object") return;
+    var k=(n.at||0)+"|"+(n.t||"")+"|"+(n.c||"")+"|"+(n.x||"");
+    if(seen[k]) return; seen[k]=1; out.push(n);
+  });
+  out.sort(function(x,y){return (x.at||0)-(y.at||0);});
+  return out;
+}
+/* 按天合并，不是整份覆盖 —— 一台设备离线一周回来，也不会把另一台那一周抹掉。
+   同一天两边都有：谁的 upd 新听谁的。这条成立是因为【每次写之前都先合并】，
+   所以远端比较新 ⇒ 远端里已经含了我们的那份。 */
+function ghAdoptRec(src,newer){
+  SECT.forEach(function(sec){
+    var s=src&&src[sec]; if(!s||typeof s!=="object") return;
+    for(var d in s){
+      if(sec==="notes") D.notes[d]=ghMergeNotes(D.notes[d],s[d]);
+      else if(D[sec][d]===undefined||newer) D[sec][d]=s[d];
+    }
+  });
+}
+function ghAdoptSet(src){
+  SETK.forEach(function(k){ if(src[k]!==undefined) D[k]=src[k]; });
+  if(src.upd) D.upd=src.upd;            /* 认了对方的状态，时间戳也要跟着认 */
+}
+function ghYears(src){
+  if(Array.isArray(src&&src.years))
+    src.years.forEach(function(y){ if(D.years.indexOf(y)<0) D.years.push(y); });
+}
+function ghBuild(p){ return p==="settings.json"?settingsOnly():yearSlice(p.slice(0,4)); }
+/* 内容跟云端一模一样就不写 —— 否则每开一次页面就白记一次 commit */
+async function ghPutIf(p,msg){
+  var obj=ghBuild(p), s=JSON.stringify(obj);
+  if(ghRaw[p]===s) return 0;
+  try{ await ghPut(p,obj,msg); }
+  catch(e){
+    if(!e||!e.conflict) throw e;
+    var fresh=await ghGet(p);           /* 别人抢先写了：拉回来合并，再写一次 */
+    if(fresh){
+      var newer=(fresh.upd||0)>(D.upd||0);
+      if(p==="settings.json"){ ghYears(fresh); if(newer) ghAdoptSet(fresh); }
+      else ghAdoptRec(fresh,newer);
+      norm(); D.years=yearsFromData();
+      obj=ghBuild(p); s=JSON.stringify(obj);
+    }
+    await ghPut(p,obj,msg);
+  }
+  ghRaw[p]=s;
+  return 1;
+}
+
+function ghStat(t,c){ setH("ghstat",'<span class="'+(c||"gm")+'">'+t+"</span>"); }
+function hm(d){return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function ghUI(){
+  var card=document.getElementById("ghcard"); if(!card) return;
+  var on=!!(GH.on&&GH.tok&&GH.repo);
+  document.getElementById("ghoff").hidden=on;
+  document.getElementById("ghon").hidden=!on;
+  set("ghm",on?"开着":"没连");
+  if(on) setH("ghwho","在同步：<b>"+esc(GH.repo)+"</b><br>令牌存在这台设备上，"+
+    "导出的备份里没有它。");
+  set("syncnote",on?("和 "+GH.repo+" 同步中 · 记录还是同时存在这台设备上"):
+    "数据存在这台设备上 · 想手机电脑同步就往上翻到「云同步」");
+}
+
+/* 返回 null＝成功，返回错误对象＝没成 */
+async function ghSync(full){
+  if(!GH.on||!GH.tok||!GH.repo) return {msg:"还没连"};
+  if(ghBusy){ ghAgain=1; return null; }
+  ghBusy=1; ghStat("同步中…");
+  var err=null;
+  try{
+    var st=await ghGet("settings.json");
+    var newer=!!(st&&(st.upd||0)>(D.upd||0));
+    if(st){ ghYears(st); if(newer) ghAdoptSet(st); }
+
+    /* 拉哪几年：今年、正在看的那一年，加上这台设备还没拉过的年份 */
+    var want={}; want[yr(cur)]=1; want[yr(today)]=1;
+    D.years.forEach(function(y){ if(full||GH.pulled.indexOf(y)<0) want[y]=1; });
+    var ys=Object.keys(want).sort(), i;
+    for(i=0;i<ys.length;i++){
+      var yd=await ghGet(ys[i]+".json");
+      if(yd) ghAdoptRec(yd,newer);
+      if(GH.pulled.indexOf(ys[i])<0) GH.pulled.push(ys[i]);
+    }
+    norm(); D.years=yearsFromData();
+    try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
+    syncSettingsInputs(); render();
+
+    /* 第一次连接（或手点立即同步）要把本地【所有年份】都推上去 ——
+       只推当年的话，以前攒的那些年在另一台设备上永远看不见。 */
+    var push=full?D.years.slice():[yr(cur)];
+    if(push.indexOf(yr(today))<0) push.push(yr(today));
+    if(push.indexOf(yr(cur))<0) push.push(yr(cur));
+    await ghPutIf("settings.json","猫饭 · 设置 "+today);
+    for(i=0;i<push.length;i++) await ghPutIf(push[i]+".json","猫饭 · "+push[i]+" 年记录 "+today);
+
+    ghLastOK=Date.now(); ghSave();
+    ghStat("已同步 · "+hm(new Date()),"gok");
+  }catch(e){
+    err=e||{msg:"未知错误"};
+    /* 钥匙不对 / 仓库不对：立刻改回"没连" —— 卡片上还写着"开着"才是最坏的，
+       他会以为存上了。网络不通不算，那个过会儿自己就好了。 */
+    var dead=!err.net&&(err.st===401||err.st===403||err.st===404);
+    if(dead){ GH.on=0; GH.tok=""; ghSave(); ghUI(); }
+    ghStat("没同步上："+(err.msg||"未知错误")+"<br><span class=\"gm\">"+
+      (dead?"已经改回没连了。修好之后把令牌重新粘一次。"
+          :"记录都还好好在这台设备上，修好了再点「立即同步」就补上。")+"</span>","gbad");
+  }
+  ghBusy=0;
+  if(ghAgain){ ghAgain=0; setTimeout(function(){ghSync();},900); }
+  return err;
+}
+function ghQueue(){
+  if(!GH.on) return;
+  clearTimeout(ghTimer);
+  ghTimer=setTimeout(function(){ghSync();},2500);   /* 连点几下只推一次 */
+}
+
+if(HOSTED){
+  document.getElementById("ghcard").hidden=false;
+  document.getElementById("ghrepo").value=GH.repo||"";
+  ghUI();
+  document.getElementById("ghgo").addEventListener("click",async function(){
+    var rp=(document.getElementById("ghrepo").value||"").trim()
+      .replace(/^https?:\/\/(www\.)?github\.com\//i,"").replace(/\.git$/i,"")
+      .replace(/^\/+|\/+$/g,"");
+    var tk=(document.getElementById("ghtok").value||"").trim();
+    if(!/^[\w.-]+\/[\w.-]+$/.test(rp)){
+      ghStat("仓库要写成「用户名/仓库名」，比如 nathan/catfeed-data","gbad"); return; }
+    if(!tk){ ghStat("把令牌粘进来再点连接","gbad"); return; }
+    GH.repo=rp; GH.tok=tk; GH.on=1; GH.pulled=[];
+    ghShas={}; ghRaw={}; ghSave();
+    document.getElementById("ghtok").value="";      /* 输进去就不再显示了 */
+    document.getElementById("ghrepo").value=rp;
+    ghUI();
+    await ghSync(1);                 /* 钥匙对不对由 ghSync 统一判，这里不重复一遍 */
+    ghUI();
+  });
+  document.getElementById("ghnow").addEventListener("click",function(){ ghSync(1); });
+  document.getElementById("ghcut").addEventListener("click",function(){
+    GH.on=0; GH.tok=""; GH.pulled=[]; ghShas={}; ghRaw={}; ghSave(); ghUI();
+    ghStat("已断开 · 令牌从这台设备上删掉了，记录一条没动","gok");
+  });
+  if(GH.on){
+    ghSync(GH.pulled.length?0:1);
+    /* 从后台切回来（多半是在另一台设备上改过了）顺手拉一次 */
+    document.addEventListener("visibilitychange",function(){
+      if(document.visibilityState==="visible"&&GH.on&&Date.now()-ghLastOK>45000) ghSync(0);
+    });
+  }
+}
+
+/* ══════════ 跨设备同步 ══════════ */
+(async function(){
+  try{
+    var db=await claude.use("db");
+    if(!db) return;
+    dbH=db; docRef=db.doc("state/main");
+    function persist(){ try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){} }
+    function adoptSet(src){
+      SETK.forEach(function(k){ if(src[k]!==undefined) D[k]=src[k]; });
+      if(src.upd) D.upd=Math.max(D.upd||0,src.upd);
+    }
+    /* 记录只合并、不覆盖 —— 两台设备各记一天都留得住，删不掉东西 */
+    function adoptLog(src){
+      SECT.forEach(function(sec){
+        if(src[sec]) for(var d in src[sec]) D[sec][d]=src[sec][d];
+      });
+    }
+    function mergeYears(ys){
+      if(Array.isArray(ys)) ys.forEach(function(y){ if(D.years.indexOf(y)<0) D.years.push(y); });
+    }
+    var snap=await docRef.get(), legacy=false;
+    if(snap&&snap.data){
+      if((snap.data.upd||0)>(D.upd||0)) adoptSet(snap.data);
+      mergeYears(snap.data.years);
+      /* 老版本把整段历史塞在 state/main 里，读出来搬家 */
+      if(snap.data.marks||snap.data.wa||snap.data.wb){ adoptLog(snap.data); legacy=true; }
+    }
+    D.years=yearsFromData();
+    for(var i=0;i<D.years.length;i++){
+      try{ var ys=await db.doc("log/"+D.years[i]).get(); if(ys&&ys.data) adoptLog(ys.data); }catch(e){}
+    }
+    norm(); D.years=yearsFromData(); persist();
+    syncSettingsInputs(); render();
+    if(legacy||!snap||!snap.data){
+      quiet=true;
+      var jobs=[docRef.set(settingsOnly())];
+      D.years.forEach(function(y){ jobs.push(db.doc("log/"+y).set(yearSlice(y))); });
+      try{ await Promise.all(jobs); }catch(e){}
+      setTimeout(function(){quiet=false;},600);
+    }
+    docRef.onSnapshot(function(sn){
+      if(quiet||!sn||!sn.data) return;
+      if((sn.data.upd||0)<=(D.upd||0)) return;
+      adoptSet(sn.data); mergeYears(sn.data.years); norm(); persist();
+      syncSettingsInputs(); render();
+    });
+    db.doc("log/"+yr(today)).onSnapshot(function(sn){
+      if(quiet||!sn||!sn.data) return;
+      adoptLog(sn.data); norm(); persist(); render();
+    });
+    set("syncnote","手机和电脑自动同步 · 按年分开存，记多少年也不会越写越慢");
+  }catch(e){}
+})();
+
+})();
+</script>
+
+<script>
+if("serviceWorker" in navigator)
+  navigator.serviceWorker.register("sw.js").catch(function(){});
+</script>
+</body>
+</html>
