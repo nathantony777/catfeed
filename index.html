@@ -840,10 +840,16 @@ function settingsOnly(){
   SETK.forEach(function(k){o[k]=D[k];});
   return o;
 }
+/* 空的那天不是记录，是开页面的副产物 —— render() 里的 mk(cur) 每开一次就给当天建个空
+   格子。把它推上去，另一台设备会以为"我这天有数据"，于是拿时间戳去抢；抢赢了就把对方
+   真记的那顿抹掉。2026-09-14 实测复现过（手机记的早饭被电脑的空格子吃了）。
+   注意只对【对象】判空：wa/wb 存的是体重数字，Object.keys(5.0) 也是空的，
+   照着删会把所有体重一起删掉。 */
+function emptyDay(v){ return !!v&&typeof v==="object"&&Object.keys(v).length===0; }
 function yearSlice(y){
   var o={upd:D.upd};
   SECT.forEach(function(sec){ o[sec]={};
-    for(var d in D[sec]) if(yr(d)===y) o[sec][d]=D[sec][d]; });
+    for(var d in D[sec]) if(yr(d)===y&&!emptyDay(D[sec][d])) o[sec][d]=D[sec][d]; });
   return o;
 }
 function save(){
@@ -1669,8 +1675,11 @@ function ghAdoptRec(src,newer){
   SECT.forEach(function(sec){
     var s=src&&src[sec]; if(!s||typeof s!=="object") return;
     for(var d in s){
-      if(sec==="notes") D.notes[d]=ghMergeNotes(D.notes[d],s[d]);
-      else if(D[sec][d]===undefined||newer) D[sec][d]=s[d];
+      if(sec==="notes"){ D.notes[d]=ghMergeNotes(D.notes[d],s[d]); continue; }
+      /* 空格子不参与"谁新听谁的"：对方是空的就不收，自己是空的就无条件收 ——
+         否则一台只是【打开看了一眼】的设备，能把另一台真记的那天抹掉。见 emptyDay。 */
+      if(emptyDay(s[d])) continue;
+      if(D[sec][d]===undefined||emptyDay(D[sec][d])||newer) D[sec][d]=s[d];
     }
   });
 }
@@ -1820,7 +1829,11 @@ if(HOSTED){
     /* 记录只合并、不覆盖 —— 两台设备各记一天都留得住，删不掉东西 */
     function adoptLog(src){
       SECT.forEach(function(sec){
-        if(src[sec]) for(var d in src[sec]) D[sec][d]=src[sec][d];
+        if(!src[sec]) return;
+        for(var d in src[sec]){
+          if(emptyDay(src[sec][d])) continue;   /* 空格子是开页面的副产物，不是记录，别拿它盖真数据 */
+          D[sec][d]=src[sec][d];
+        }
       });
     }
     function mergeYears(ys){
