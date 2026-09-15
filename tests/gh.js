@@ -24,12 +24,34 @@ function done(title){
   process.exit(bad.length?1:0);
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* 把"今天"钉死。页面每打开一次就给当天建个空格子，所以"一共几天"这类断言
+   会随真实日历变 —— 2026-09-14 写的测试第二天就红了，而代码一个字没改。
+   跟代码无关却会红的闸，人两次之后就开始无视它，比没有还坏。
+   只冻结 new Date()（决定"今天"），不动 Date.now() —— 那个是时间戳，
+   合并要靠它比大小，冻了会把"谁更新"全变成平局。
+   想验日期无关性：CATFEED_TEST_TODAY=2027-01-01 node tests/run.js */
+const FROZEN=process.env.CATFEED_TEST_TODAY||"2026-09-14";
+function frozenDateClass(){
+  const T=new Date(FROZEN+"T08:00:00").getTime();
+  return new Proxy(Date,{
+    construct(Target,args){ return args.length?new Target(...args):new Target(T); }
+  });
+}
+/* 测试里的日期一律从冻结的"今天"推出来，不写死年份 ——
+   同步按年分文件、平时只管当年，所以把数据种在别的年份等于在考另一回事。
+   dt("09-14")＝今年9月14 · dty(1,"03-02")＝明年3月2 · yj()＝今年那个 json */
+const Y=+FROZEN.slice(0,4);
+const dt=md=>Y+"-"+md;
+const dty=(n,md)=>(Y+n)+"-"+md;
+const yj=(n)=>(Y+(n||0))+".json";
+const ys=(n)=>String(Y+(n||0));
 const plain=s=>String(s).replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
 const dec=f=>JSON.parse(Buffer.from(f.content,"base64").toString());
 /* 一眼假的令牌 —— 测试数据永远不用真值 */
 const CFG={repo:"nathan/catfeed-data",tok:"github_pat_TESTONLY_000",on:1,pulled:[]};
 const cfg=o=>Object.assign({},CFG,o||{});
-const D=o=>JSON.stringify(Object.assign({start:"2026-09-14"},o));
+const D=o=>JSON.stringify(Object.assign({start:dt("09-14")},o));
 
 /* ── 假 GitHub Contents API ── */
 function repoNew(){ return {files:{}, log:[], failNextPut:null, status:null}; }
@@ -79,7 +101,7 @@ function device(name, repo, seed, ghcfg, opt){
     return Promise.all(ls.map(f=>f.call(e,arg||{target:e,preventDefault(){}}))); }
   const ctx={
     console, setTimeout, clearTimeout, setInterval:()=>0, clearInterval:()=>0,
-    Promise, Date, Math, JSON, Object, Array, String, Number, RegExp, Error,
+    Promise, Date:frozenDateClass(), Math, JSON, Object, Array, String, Number, RegExp, Error,
     isNaN, parseFloat, parseInt,
     TextEncoder, TextDecoder, btoa, atob, URL, Uint8Array,
     fetch: opt.fetch || makeFetch(repo,name),
@@ -98,4 +120,4 @@ function device(name, repo, seed, ghcfg, opt){
   try{ vm.runInContext(CODE, ctx, {filename:name+".js"}); }catch(e){ threw=e; }
   return {name, store, bag, get, fire, threw, ctx};
 }
-module.exports={HTML, CODE, repoNew, device, makeFetch, ok, done, wait, plain, dec, CFG, cfg, D};
+module.exports={HTML, CODE, FROZEN, Y, dt, dty, yj, ys, repoNew, device, makeFetch, ok, done, wait, plain, dec, CFG, cfg, D};
